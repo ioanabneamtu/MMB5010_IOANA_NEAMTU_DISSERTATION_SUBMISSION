@@ -1,0 +1,50 @@
+NAME	SYMBOL	TITLE	RANK IN GENE LIST	RANK METRIC SCORE	RUNNING ES	CORE ENRICHMENT	
+row_0	PPP1R15A	protein phosphatase 1 regulatory subunit 15A [Source:HGNC Symbol;Acc:HGNC:14375]	89	0.9715646505355835	0.05182555	No	
+row_1	BCAR3	BCAR3 adaptor protein, NSP family member [Source:HGNC Symbol;Acc:HGNC:973]	341	0.675710141658783	0.07552204	No	
+row_2	BMP2	bone morphogenetic protein 2 [Source:HGNC Symbol;Acc:HGNC:1069]	747	0.4996567964553833	0.078718886	No	
+row_3	SMAD1	SMAD family member 1 [Source:HGNC Symbol;Acc:HGNC:6767]	1094	0.3986464738845825	0.079775855	No	
+row_4	ID2	inhibitor of DNA binding 2 [Source:HGNC Symbol;Acc:HGNC:5361]	1208	0.3729014992713928	0.09451938	No	
+row_5	HDAC1	histone deacetylase 1 [Source:HGNC Symbol;Acc:HGNC:4852]	1797	0.2805592715740204	0.07276947	No	
+row_6	ARID4B	AT-rich interaction domain 4B [Source:HGNC Symbol;Acc:HGNC:15550]	1896	0.26970207691192627	0.08237025	No	
+row_7	BMPR1A	bone morphogenetic protein receptor type 1A [Source:HGNC Symbol;Acc:HGNC:1076]	2610	0.2105017900466919	0.048302338	No	
+row_8	IFNGR2	interferon gamma receptor 2 [Source:HGNC Symbol;Acc:HGNC:5440]	2785	0.1997540444135666	0.048791084	No	
+row_9	CTNNB1	catenin beta 1 [Source:HGNC Symbol;Acc:HGNC:2514]	4308	0.14139612019062042	-0.042200465	No	
+row_10	SPTBN1	spectrin beta, non-erythrocytic 1 [Source:HGNC Symbol;Acc:HGNC:11275]	4422	0.13793863356113434	-0.041395817	No	
+row_11	BMPR2	bone morphogenetic protein receptor type 2 [Source:HGNC Symbol;Acc:HGNC:1078]	4729	0.12947070598602295	-0.05369554	No	
+row_12	WWTR1	WW domain containing transcription regulator 1 [Source:HGNC Symbol;Acc:HGNC:24042]	4874	0.1255500465631485	-0.05564999	No	
+row_13	XIAP	X-linked inhibitor of apoptosis [Source:HGNC Symbol;Acc:HGNC:592]	4932	0.12392733246088028	-0.05202	No	
+row_14	TJP1	tight junction protein 1 [Source:HGNC Symbol;Acc:HGNC:11827]	5237	0.1156269758939743	-0.06501039	No	
+row_15	CDH1	cadherin 1 [Source:HGNC Symbol;Acc:HGNC:1748]	5802	0.09869816899299622	-0.09598189	No	
+row_16	UBE2D3	ubiquitin conjugating enzyme E2 D3 [Source:HGNC Symbol;Acc:HGNC:12476]	5851	0.09733298420906067	-0.09334192	No	
+row_17	THBS1	thrombospondin 1 [Source:HGNC Symbol;Acc:HGNC:11785]	7872	0.033871449530124664	-0.22322936	No	
+row_18	KLF10	KLF transcription factor 10 [Source:HGNC Symbol;Acc:HGNC:11810]	8638	0.007777887396514416	-0.272719	No	
+row_19	CDKN1C	cyclin dependent kinase inhibitor 1C [Source:HGNC Symbol;Acc:HGNC:1786]	8784	0.0022530776914209127	-0.28205317	No	
+row_20	NCOR2	nuclear receptor corepressor 2 [Source:HGNC Symbol;Acc:HGNC:7673]	8973	-0.00401929160580039	-0.29409027	No	
+row_21	PPP1CA	protein phosphatase 1 catalytic subunit alpha [Source:HGNC Symbol;Acc:HGNC:9281]	9626	-0.028768615797162056	-0.33495626	No	
+row_22	HIPK2	homeodomain interacting protein kinase 2 [Source:HGNC Symbol;Acc:HGNC:14402]	10866	-0.09019673615694046	-0.41050652	No	
+row_23	TGIF1	TGFB induced factor homeobox 1 [Source:HGNC Symbol;Acc:HGNC:11776]	11301	-0.11378783732652664	-0.43209442	No	
+row_24	TGFB1	transforming growth factor beta 1 [Source:HGNC Symbol;Acc:HGNC:11766]	12115	-0.16791188716888428	-0.47521847	No	
+row_25	SERPINE1	serpin family E member 1 [Source:HGNC Symbol;Acc:HGNC:8583]	12127	-0.16904327273368835	-0.46590847	No	
+row_26	RAB31	RAB31, member RAS oncogene family [Source:HGNC Symbol;Acc:HGNC:9771]	12674	-0.21037735044956207	-0.48907942	Yes	
+row_27	FURIN	furin, paired basic amino acid cleaving enzyme [Source:HGNC Symbol;Acc:HGNC:8568]	12747	-0.21729929745197296	-0.48088968	Yes	
+row_28	SMURF1	SMAD specific E3 ubiquitin protein ligase 1 [Source:HGNC Symbol;Acc:HGNC:16807]	12821	-0.2249729186296463	-0.47231	Yes	
+row_29	LTBP2	latent transforming growth factor beta binding protein 2 [Source:HGNC Symbol;Acc:HGNC:6715]	12907	-0.23273158073425293	-0.46405363	Yes	
+row_30	MAP3K7	mitogen-activated protein kinase kinase kinase 7 [Source:HGNC Symbol;Acc:HGNC:6859]	13096	-0.250618577003479	-0.46146154	Yes	
+row_31	ACVR1	activin A receptor type 1 [Source:HGNC Symbol;Acc:HGNC:171]	13735	-0.32717424631118774	-0.48371083	Yes	
+row_32	PMEPA1	prostate transmembrane protein, androgen induced 1 [Source:HGNC Symbol;Acc:HGNC:14107]	13887	-0.3518315851688385	-0.47269848	Yes	
+row_33	SKIL	SKI like proto-oncogene [Source:HGNC Symbol;Acc:HGNC:10897]	14100	-0.38463151454925537	-0.46372336	Yes	
+row_34	SLC20A1	solute carrier family 20 member 1 [Source:HGNC Symbol;Acc:HGNC:10946]	14327	-0.4253287613391876	-0.45324802	Yes	
+row_35	PPM1A	protein phosphatase, Mg2+/Mn2+ dependent 1A [Source:HGNC Symbol;Acc:HGNC:9275]	14441	-0.44912758469581604	-0.4339825	Yes	
+row_36	SMURF2	SMAD specific E3 ubiquitin protein ligase 2 [Source:HGNC Symbol;Acc:HGNC:16809]	14481	-0.4555046260356903	-0.40950677	Yes	
+row_37	SKI	SKI proto-oncogene [Source:HGNC Symbol;Acc:HGNC:10896]	14547	-0.4692090153694153	-0.38591576	Yes	
+row_38	SMAD3	SMAD family member 3 [Source:HGNC Symbol;Acc:HGNC:6769]	14592	-0.47780516743659973	-0.36044356	Yes	
+row_39	FNTA	farnesyltransferase, CAAX box, alpha [Source:HGNC Symbol;Acc:HGNC:3782]	14655	-0.5010789632797241	-0.334766	Yes	
+row_40	ENG	endoglin [Source:HGNC Symbol;Acc:HGNC:3349]	14675	-0.5055485963821411	-0.30601558	Yes	
+row_41	TRIM33	tripartite motif containing 33 [Source:HGNC Symbol;Acc:HGNC:16290]	14683	-0.5090793967247009	-0.27627218	Yes	
+row_42	ID3	inhibitor of DNA binding 3 [Source:HGNC Symbol;Acc:HGNC:5362]	14764	-0.5376628637313843	-0.24959964	Yes	
+row_43	CDK9	cyclin dependent kinase 9 [Source:HGNC Symbol;Acc:HGNC:1780]	14855	-0.5693889260292053	-0.22169794	Yes	
+row_44	APC	APC regulator of WNT signaling pathway [Source:HGNC Symbol;Acc:HGNC:583]	14962	-0.6116847991943359	-0.19233184	Yes	
+row_45	SMAD6	SMAD family member 6 [Source:HGNC Symbol;Acc:HGNC:6772]	15211	-0.7850099205970764	-0.16195539	Yes	
+row_46	SMAD7	SMAD family member 7 [Source:HGNC Symbol;Acc:HGNC:6773]	15251	-0.8347233533859253	-0.114983	Yes	
+row_47	TGFBR1	transforming growth factor beta receptor 1 [Source:HGNC Symbol;Acc:HGNC:11772]	15314	-0.964663565158844	-0.06180387	Yes	
+row_48	ID1	inhibitor of DNA binding 1 [Source:HGNC Symbol;Acc:HGNC:5360]	15349	-1.094639778137207	9.142052E-4	Yes	

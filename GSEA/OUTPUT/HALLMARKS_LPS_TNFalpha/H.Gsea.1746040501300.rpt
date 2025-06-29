@@ -1,0 +1,34 @@
+producer_class	xtools.gsea.Gsea
+producer_timestamp	1746040501300
+param	zip_report	false
+param	num	100
+param	scoring_scheme	weighted
+param	norm	meandiv
+param	out	/home/ioana/Desktop/GSEA
+param	mode	Max_probe
+param	include_only_symbols	true
+param	set_max	500
+param	gmx	ftp.broadinstitute.org://pub/gsea/msigdb/human/gene_sets/h.all.v2024.1.Hs.symbols.gmt
+param	plot_top_x	20
+param	nperm	1000
+param	order	descending
+param	rnd_seed	timestamp
+param	rpt_label	H
+param	set_min	15
+param	res	/home/ioana/Desktop/IOANA_NEAMTU_Differential_Gene_Expression_MSc_BIOINFORMATICS/expression_GSEA_TNFalpha_LPS.gct
+param	chip	ftp.broadinstitute.org://pub/gsea/msigdb/human/annotations/Human_Ensembl_Gene_ID_MSigDB.v2024.1.Hs.chip
+param	create_svgs	false
+param	cls	/home/ioana/Desktop/IOANA_NEAMTU_Differential_Gene_Expression_MSc_BIOINFORMATICS/phenotype_labels_GSEA_file_LPS_TNFalpha.cls#low_versus_high
+param	sort	real
+param	create_gcts	false
+param	help	false
+param	save_rnd_lists	false
+param	median	false
+param	metric	Signal2Noise
+param	make_sets	true
+param	rnd_type	no_balance
+param	gui	false
+param	permute	phenotype
+param	collapse	Collapse
+
+file	/home/ioana/Desktop/GSEA/H.Gsea.1746040501300/index.html

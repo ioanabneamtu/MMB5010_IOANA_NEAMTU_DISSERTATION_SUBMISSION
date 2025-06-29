@@ -1,0 +1,24 @@
+NAME	SYMBOL	TITLE	RANK IN GENE LIST	RANK METRIC SCORE	RUNNING ES	CORE ENRICHMENT	
+row_0	VAV2	vav guanine nucleotide exchange factor 2 [Source:HGNC Symbol;Acc:HGNC:12658]	1358	0.3438827097415924	0.0038157082	No	
+row_1	ITGAV	integrin subunit alpha V [Source:HGNC Symbol;Acc:HGNC:6150]	2362	0.22862470149993896	-1.7614846E-4	No	
+row_2	PTK2	protein tyrosine kinase 2 [Source:HGNC Symbol;Acc:HGNC:9611]	2645	0.20824258029460907	0.03735739	No	
+row_3	MSX1	msh homeobox 1 [Source:HGNC Symbol;Acc:HGNC:7391]	3312	0.17272618412971497	0.040323384	No	
+row_4	APP	amyloid beta precursor protein [Source:HGNC Symbol;Acc:HGNC:620]	3318	0.17257653176784515	0.086336344	No	
+row_5	SLCO2A1	solute carrier organic anion transporter family member 2A1 [Source:HGNC Symbol;Acc:HGNC:10955]	4009	0.14996695518493652	0.08162677	No	
+row_6	APOH	apolipoprotein H [Source:HGNC Symbol;Acc:HGNC:616]	4204	0.14432623982429504	0.10773426	No	
+row_7	COL5A2	collagen type V alpha 2 chain [Source:HGNC Symbol;Acc:HGNC:2210]	6156	0.08835148066282272	0.004282156	No	
+row_8	NRP1	neuropilin 1 [Source:HGNC Symbol;Acc:HGNC:8004]	6856	0.06719138473272324	-0.02324032	No	
+row_9	LRPAP1	LDL receptor related protein associated protein 1 [Source:HGNC Symbol;Acc:HGNC:6701]	7113	0.059474799782037735	-0.023957927	No	
+row_10	OLR1	oxidized low density lipoprotein receptor 1 [Source:HGNC Symbol;Acc:HGNC:8133]	7173	0.057378482073545456	-0.012397015	No	
+row_11	VCAN	versican [Source:HGNC Symbol;Acc:HGNC:2464]	7530	0.04583930969238281	-0.023294395	No	
+row_12	TNFRSF21	TNF receptor superfamily member 21 [Source:HGNC Symbol;Acc:HGNC:13469]	7878	0.033657919615507126	-0.036875963	No	
+row_13	S100A4	S100 calcium binding protein A4 [Source:HGNC Symbol;Acc:HGNC:10494]	7981	0.03009147197008133	-0.035444885	No	
+row_14	CXCL6	C-X-C motif chemokine ligand 6 [Source:HGNC Symbol;Acc:HGNC:10643]	8822	0.0010782524477690458	-0.0899106	No	
+row_15	PGLYRP1	peptidoglycan recognition protein 1 [Source:HGNC Symbol;Acc:HGNC:8904]	9560	-0.026485098525881767	-0.13084023	No	
+row_16	LPL	lipoprotein lipase [Source:HGNC Symbol;Acc:HGNC:6677]	11159	-0.10590322315692902	-0.20656924	Yes	
+row_17	JAG2	jagged canonical Notch ligand 2 [Source:HGNC Symbol;Acc:HGNC:6189]	11513	-0.1262899935245514	-0.19566908	Yes	
+row_18	JAG1	jagged canonical Notch ligand 1 [Source:HGNC Symbol;Acc:HGNC:6188]	11593	-0.13053353130817413	-0.16576886	Yes	
+row_19	FGFR1	fibroblast growth factor receptor 1 [Source:HGNC Symbol;Acc:HGNC:3688]	12225	-0.17458868026733398	-0.16002129	Yes	
+row_20	PDGFA	platelet derived growth factor subunit A [Source:HGNC Symbol;Acc:HGNC:8799]	13649	-0.3161675035953522	-0.16788447	Yes	
+row_21	VEGFA	vascular endothelial growth factor A [Source:HGNC Symbol;Acc:HGNC:12680]	14443	-0.44928038120269775	-0.0989388	Yes	
+row_22	THBD	thrombomodulin [Source:HGNC Symbol;Acc:HGNC:11784]	14916	-0.591569185256958	0.02913746	Yes	

@@ -1,0 +1,180 @@
+NAME	SYMBOL	TITLE	RANK IN GENE LIST	RANK METRIC SCORE	RUNNING ES	CORE ENRICHMENT	
+row_0	HAVCR2	hepatitis A virus cellular receptor 2 [Source:HGNC Symbol;Acc:HGNC:18437]	75	0.6844147443771362	0.009400674	No	
+row_1	ASPH	aspartate beta-hydroxylase [Source:HGNC Symbol;Acc:HGNC:757]	115	0.6535658240318298	0.020703936	No	
+row_2	ARHGAP18	Rho GTPase activating protein 18 [Source:HGNC Symbol;Acc:HGNC:21035]	153	0.629207193851471	0.03162489	No	
+row_3	UBE2E2	ubiquitin conjugating enzyme E2 E2 [Source:HGNC Symbol;Acc:HGNC:12478]	409	0.5236523151397705	0.0247241	No	
+row_4	PMM2	phosphomannomutase 2 [Source:HGNC Symbol;Acc:HGNC:9115]	422	0.5199452042579651	0.03507333	No	
+row_5	EGR2	early growth response 2 [Source:HGNC Symbol;Acc:HGNC:3239]	696	0.45588481426239014	0.025428426	No	
+row_6	TERF2	telomeric repeat binding factor 2 [Source:HGNC Symbol;Acc:HGNC:11729]	742	0.4478372037410736	0.031870253	No	
+row_7	DENND4C	DENN domain containing 4C [Source:HGNC Symbol;Acc:HGNC:26079]	775	0.44084349274635315	0.03908848	No	
+row_8	IL1RAP	interleukin 1 receptor accessory protein [Source:HGNC Symbol;Acc:HGNC:5995]	889	0.4231671988964081	0.040149137	No	
+row_9	PTER	phosphotriesterase related [Source:HGNC Symbol;Acc:HGNC:9590]	1143	0.39216139912605286	0.030557297	No	
+row_10	NDP	norrin cystine knot growth factor NDP [Source:HGNC Symbol;Acc:HGNC:7678]	1290	0.37290504574775696	0.02818134	No	
+row_11	KCNN4	potassium calcium-activated channel subfamily N member 4 [Source:HGNC Symbol;Acc:HGNC:6293]	1296	0.37156108021736145	0.035832047	No	
+row_12	DDX18	DEAD-box helicase 18 [Source:HGNC Symbol;Acc:HGNC:2741]	1681	0.3278087079524994	0.015510921	No	
+row_13	ASTE1	asteroid homolog 1 [Source:HGNC Symbol;Acc:HGNC:25021]	1719	0.3244380056858063	0.01986398	No	
+row_14	SLC7A8	solute carrier family 7 member 8 [Source:HGNC Symbol;Acc:HGNC:11066]	2193	0.28135818243026733	-0.007805343	No	
+row_15	FAM210A	family with sequence similarity 210 member A [Source:HGNC Symbol;Acc:HGNC:28346]	2228	0.27942490577697754	-0.0042083855	No	
+row_16	CMTM2	CKLF like MARVEL transmembrane domain containing 2 [Source:HGNC Symbol;Acc:HGNC:19173]	2255	0.27808573842048645	-6.975559E-5	No	
+row_17	PRKD3	protein kinase D3 [Source:HGNC Symbol;Acc:HGNC:9408]	2812	0.24280156195163727	-0.03448926	No	
+row_18	VWA8	von Willebrand factor A domain containing 8 [Source:HGNC Symbol;Acc:HGNC:29071]	2880	0.23972471058368683	-0.0341013	No	
+row_19	JCAD	junctional cadherin 5 associated [Source:HGNC Symbol;Acc:HGNC:29283]	3061	0.23131658136844635	-0.041953307	No	
+row_20	SLC43A3	solute carrier family 43 member 3 [Source:HGNC Symbol;Acc:HGNC:17466]	3341	0.21819566190242767	-0.057148404	No	
+row_21	MYT1L	myelin transcription factor 1 like [Source:HGNC Symbol;Acc:HGNC:7623]	3753	0.20412379503250122	-0.08206054	No	
+row_22	RRP12	ribosomal RNA processing 12 homolog [Source:HGNC Symbol;Acc:HGNC:29100]	3985	0.1972353458404541	-0.09428415	No	
+row_23	LPL	lipoprotein lipase [Source:HGNC Symbol;Acc:HGNC:6677]	4131	0.192749485373497	-0.10047121	No	
+row_24	GLMN	glomulin, FKBP associated protein [Source:HGNC Symbol;Acc:HGNC:14373]	4292	0.18728093802928925	-0.10784587	No	
+row_25	MYC	MYC proto-oncogene, bHLH transcription factor [Source:HGNC Symbol;Acc:HGNC:7553]	4501	0.18006497621536255	-0.11879923	No	
+row_26	IL1RN	interleukin 1 receptor antagonist [Source:HGNC Symbol;Acc:HGNC:6000]	4528	0.17924517393112183	-0.11679065	No	
+row_27	HOMER1	homer scaffold protein 1 [Source:HGNC Symbol;Acc:HGNC:17512]	4754	0.17108680307865143	-0.12914988	No	
+row_28	HSP90AB1	heat shock protein 90 alpha family class B member 1 [Source:HGNC Symbol;Acc:HGNC:5258]	4804	0.16933508217334747	-0.12899515	No	
+row_29	FERMT3	FERM domain containing kindlin 3 [Source:HGNC Symbol;Acc:HGNC:23151]	5008	0.16074194014072418	-0.14000835	No	
+row_30	TNFRSF12A	TNF receptor superfamily member 12A [Source:HGNC Symbol;Acc:HGNC:18152]	5200	0.15323036909103394	-0.15032762	No	
+row_31	SRRD	SRR1 domain containing [Source:HGNC Symbol;Acc:HGNC:33910]	5450	0.14191313087940216	-0.16502714	No	
+row_32	EPOP	elongin BC and polycomb repressive complex 2 associated protein [Source:HGNC Symbol;Acc:HGNC:34493]	5474	0.14075212180614471	-0.16363417	No	
+row_33	KCTD6	potassium channel tetramerization domain containing 6 [Source:HGNC Symbol;Acc:HGNC:22235]	5679	0.13040295243263245	-0.17537248	No	
+row_34	ALDH1A2	aldehyde dehydrogenase 1 family member A2 [Source:HGNC Symbol;Acc:HGNC:15472]	5709	0.12923702597618103	-0.17465556	No	
+row_35	DIAPH1	diaphanous related formin 1 [Source:HGNC Symbol;Acc:HGNC:2876]	5719	0.1288827508687973	-0.17251994	No	
+row_36	GINS3	GINS complex subunit 3 [Source:HGNC Symbol;Acc:HGNC:25851]	5768	0.1268267035484314	-0.17320995	No	
+row_37	ADAT2	adenosine deaminase tRNA specific 2 [Source:HGNC Symbol;Acc:HGNC:21172]	5813	0.12400785833597183	-0.17367546	No	
+row_38	DOCK1	dedicator of cytokinesis 1 [Source:HGNC Symbol;Acc:HGNC:2987]	5912	0.11934927105903625	-0.17809245	No	
+row_39	TP53RK	TP53 regulating kinase [Source:HGNC Symbol;Acc:HGNC:16197]	5948	0.11718446016311646	-0.17806317	No	
+row_40	MFN2	mitofusin 2 [Source:HGNC Symbol;Acc:HGNC:16877]	6071	0.11045027524232864	-0.18438353	No	
+row_41	FLVCR2	FLVCR choline and putative heme transporter 2 [Source:HGNC Symbol;Acc:HGNC:20105]	6184	0.10560423135757446	-0.19009516	No	
+row_42	DAGLA	diacylglycerol lipase alpha [Source:HGNC Symbol;Acc:HGNC:1165]	6303	0.09930765628814697	-0.1963704	No	
+row_43	CCL2	C-C motif chemokine ligand 2 [Source:HGNC Symbol;Acc:HGNC:10618]	6572	0.08544819802045822	-0.21364176	No	
+row_44	MAP2K6	mitogen-activated protein kinase kinase 6 [Source:HGNC Symbol;Acc:HGNC:6846]	6670	0.08093391358852386	-0.21881531	No	
+row_45	APEX2	apurinic/apyrimidinic endodeoxyribonuclease 2 [Source:HGNC Symbol;Acc:HGNC:17889]	6774	0.07590391486883163	-0.22452515	No	
+row_46	DENND4B	DENN domain containing 4B [Source:HGNC Symbol;Acc:HGNC:29044]	6893	0.06829110532999039	-0.2314688	No	
+row_47	ZNF330	zinc finger protein 330 [Source:HGNC Symbol;Acc:HGNC:15462]	6996	0.06281030923128128	-0.23738949	No	
+row_48	ISG20L2	interferon stimulated exonuclease gene 20 like 2 [Source:HGNC Symbol;Acc:HGNC:25745]	7207	0.052273061126470566	-0.25123945	No	
+row_49	MEF2A	myocyte enhancer factor 2A [Source:HGNC Symbol;Acc:HGNC:6993]	7226	0.05117705091834068	-0.25142026	No	
+row_50	EEF1AKMT1	EEF1A lysine methyltransferase 1 [Source:HGNC Symbol;Acc:HGNC:27351]	7254	0.04994717612862587	-0.25226942	No	
+row_51	SF3B3	splicing factor 3b subunit 3 [Source:HGNC Symbol;Acc:HGNC:10770]	7322	0.04591920226812363	-0.25605807	No	
+row_52	SLC17A9	solute carrier family 17 member 9 [Source:HGNC Symbol;Acc:HGNC:16192]	7331	0.045531392097473145	-0.25564736	No	
+row_53	NAT10	N-acetyltransferase 10 [Source:HGNC Symbol;Acc:HGNC:29830]	7392	0.0423436313867569	-0.25901383	No	
+row_54	CCDC14	coiled-coil domain containing 14 [Source:HGNC Symbol;Acc:HGNC:25766]	7720	0.024421362206339836	-0.28180805	No	
+row_55	KRR1	KRR1 small subunit processome component homolog [Source:HGNC Symbol;Acc:HGNC:5176]	8081	0.0035181138664484024	-0.30740616	No	
+row_56	NSFL1C	NSFL1 cofactor [Source:HGNC Symbol;Acc:HGNC:15912]	8089	0.0031315323431044817	-0.3078379	No	
+row_57	PAICS	phosphoribosylaminoimidazole carboxylase and phosphoribosylaminoimidazolesuccinocarboxamide synthase [Source:HGNC Symbol;Acc:HGNC:8587]	8253	-0.006267798598855734	-0.3193274	No	
+row_58	ZNF738	zinc finger protein 738 [Source:HGNC Symbol;Acc:HGNC:32469]	8261	-0.006763592828065157	-0.31968087	No	
+row_59	F13A1	coagulation factor XIII A chain [Source:HGNC Symbol;Acc:HGNC:3531]	8277	-0.007606263738125563	-0.32058668	No	
+row_60	FNIP2	folliculin interacting protein 2 [Source:HGNC Symbol;Acc:HGNC:29280]	8389	-0.012840586714446545	-0.32822612	No	
+row_61	FIGNL1	fidgetin like 1 [Source:HGNC Symbol;Acc:HGNC:13286]	8397	-0.013107220642268658	-0.32844284	No	
+row_62	ITGAX	integrin subunit alpha X [Source:HGNC Symbol;Acc:HGNC:6152]	8510	-0.018734311684966087	-0.33602658	No	
+row_63	TMEM109	transmembrane protein 109 [Source:HGNC Symbol;Acc:HGNC:28771]	8609	-0.02446214109659195	-0.3424884	No	
+row_64	HLTF	helicase like transcription factor [Source:HGNC Symbol;Acc:HGNC:11099]	8747	-0.032072246074676514	-0.3515676	No	
+row_65	ATP6V0E2	ATPase H+ transporting V0 subunit e2 [Source:HGNC Symbol;Acc:HGNC:21723]	8763	-0.032980337738990784	-0.35192662	No	
+row_66	SPRED1	sprouty related EVH1 domain containing 1 [Source:HGNC Symbol;Acc:HGNC:20249]	8781	-0.03366560488939285	-0.3524135	No	
+row_67	MDN1	midasin AAA ATPase 1 [Source:HGNC Symbol;Acc:HGNC:18302]	8986	-0.045042477548122406	-0.36599138	No	
+row_68	CD53	CD53 molecule [Source:HGNC Symbol;Acc:HGNC:1686]	8993	-0.045435935258865356	-0.3654401	No	
+row_69	FARSB	phenylalanyl-tRNA synthetase subunit beta [Source:HGNC Symbol;Acc:HGNC:17800]	9075	-0.049377359449863434	-0.37015265	No	
+row_70	G6PD	glucose-6-phosphate dehydrogenase [Source:HGNC Symbol;Acc:HGNC:4057]	9186	-0.05545293912291527	-0.3768024	No	
+row_71	GSPT2	G1 to S phase transition 2 [Source:HGNC Symbol;Acc:HGNC:4622]	9235	-0.058355070650577545	-0.37896803	No	
+row_72	CRYBG3	crystallin beta-gamma domain containing 3 [Source:HGNC Symbol;Acc:HGNC:34427]	9284	-0.06064040586352348	-0.3810844	No	
+row_73	HK3	hexokinase 3 [Source:HGNC Symbol;Acc:HGNC:4925]	9300	-0.06162766367197037	-0.38082606	No	
+row_74	IFI16	interferon gamma inducible protein 16 [Source:HGNC Symbol;Acc:HGNC:5395]	9403	-0.06658389419317245	-0.38666543	No	
+row_75	POLM	DNA polymerase mu [Source:HGNC Symbol;Acc:HGNC:9185]	9467	-0.07044637203216553	-0.3896402	No	
+row_76	UBAP2L	ubiquitin associated protein 2 like [Source:HGNC Symbol;Acc:HGNC:29877]	9509	-0.0726231038570404	-0.39099914	No	
+row_77	VAMP1	vesicle associated membrane protein 1 [Source:HGNC Symbol;Acc:HGNC:12642]	9557	-0.07527099549770355	-0.3927289	No	
+row_78	NOB1	NIN1 (RPN12) binding protein 1 homolog [Source:HGNC Symbol;Acc:HGNC:29540]	9633	-0.07924486696720123	-0.39636987	No	
+row_79	NARS2	asparaginyl-tRNA synthetase 2, mitochondrial [Source:HGNC Symbol;Acc:HGNC:26274]	9698	-0.08310829848051071	-0.39914313	No	
+row_80	SLC20A1	solute carrier family 20 member 1 [Source:HGNC Symbol;Acc:HGNC:10946]	9890	-0.09323366731405258	-0.41075534	No	
+row_81	ARHGEF6	Rac/Cdc42 guanine nucleotide exchange factor 6 [Source:HGNC Symbol;Acc:HGNC:685]	9960	-0.09772445261478424	-0.4135702	No	
+row_82	RPL22L1	ribosomal protein L22 like 1 [Source:HGNC Symbol;Acc:HGNC:27610]	9983	-0.09862281382083893	-0.4130138	No	
+row_83	UNG	uracil DNA glycosylase [Source:HGNC Symbol;Acc:HGNC:12572]	10044	-0.10219603031873703	-0.4150904	No	
+row_84	KLHL8	kelch like family member 8 [Source:HGNC Symbol;Acc:HGNC:18644]	10153	-0.1079874262213707	-0.4204654	No	
+row_85	UTP4	UTP4 small subunit processome component [Source:HGNC Symbol;Acc:HGNC:1983]	10174	-0.10933887958526611	-0.41953546	No	
+row_86	JADE1	jade family PHD finger 1 [Source:HGNC Symbol;Acc:HGNC:30027]	10344	-0.1213109940290451	-0.42897364	No	
+row_87	EBPL	EBP like [Source:HGNC Symbol;Acc:HGNC:18061]	10370	-0.12307203561067581	-0.4281043	No	
+row_88	NCLN	nicalin [Source:HGNC Symbol;Acc:HGNC:26923]	10520	-0.1327679455280304	-0.43586925	No	
+row_89	KCTD12	potassium channel tetramerization domain containing 12 [Source:HGNC Symbol;Acc:HGNC:14678]	10574	-0.13587743043899536	-0.43672082	No	
+row_90	AK2	adenylate kinase 2 [Source:HGNC Symbol;Acc:HGNC:362]	10619	-0.13884694874286652	-0.43686652	No	
+row_91	BBS4	Bardet-Biedl syndrome 4 [Source:HGNC Symbol;Acc:HGNC:969]	10623	-0.13896547257900238	-0.43408573	No	
+row_92	RAC2	Rac family small GTPase 2 [Source:HGNC Symbol;Acc:HGNC:9802]	10802	-0.15099617838859558	-0.44352603	No	
+row_93	TRIP6	thyroid hormone receptor interactor 6 [Source:HGNC Symbol;Acc:HGNC:12311]	10816	-0.15208080410957336	-0.44117576	No	
+row_94	ATP1A1	ATPase Na+/K+ transporting subunit alpha 1 [Source:HGNC Symbol;Acc:HGNC:799]	10821	-0.15260399878025055	-0.43817234	No	
+row_95	SHQ1	SHQ1, H/ACA ribonucleoprotein assembly factor [Source:HGNC Symbol;Acc:HGNC:25543]	11038	-0.1666947454214096	-0.44998437	No	
+row_96	CISD1	CDGSH iron sulfur domain 1 [Source:HGNC Symbol;Acc:HGNC:30880]	11053	-0.16749709844589233	-0.44737315	No	
+row_97	S100A11	S100 calcium binding protein A11 [Source:HGNC Symbol;Acc:HGNC:10488]	11179	-0.17620980739593506	-0.45249033	No	
+row_98	CDK4	cyclin dependent kinase 4 [Source:HGNC Symbol;Acc:HGNC:1773]	11467	-0.19681242108345032	-0.46871677	No	
+row_99	RNASET2	ribonuclease T2 [Source:HGNC Symbol;Acc:HGNC:21686]	11642	-0.21032734215259552	-0.47659323	No	
+row_100	SASH3	SAM and SH3 domain containing 3 [Source:HGNC Symbol;Acc:HGNC:15975]	11755	-0.22127287089824677	-0.47981215	No	
+row_101	GATM	glycine amidinotransferase [Source:HGNC Symbol;Acc:HGNC:4175]	11783	-0.2233954817056656	-0.47692344	No	
+row_102	DESI1	desumoylating isopeptidase 1 [Source:HGNC Symbol;Acc:HGNC:24577]	11899	-0.23386307060718536	-0.480085	Yes	
+row_103	C11orf24	chromosome 11 open reading frame 24 [Source:HGNC Symbol;Acc:HGNC:1174]	11916	-0.23491257429122925	-0.4761636	Yes	
+row_104	LGALS9	galectin 9 [Source:HGNC Symbol;Acc:HGNC:6570]	11922	-0.23594771325588226	-0.4714354	Yes	
+row_105	ATP13A1	ATPase 13A1 [Source:HGNC Symbol;Acc:HGNC:24215]	12007	-0.24365010857582092	-0.47217524	Yes	
+row_106	SNU13	small nuclear ribonucleoprotein 13 [Source:HGNC Symbol;Acc:HGNC:7819]	12038	-0.2462015002965927	-0.46900898	Yes	
+row_107	COPS7A	COP9 signalosome subunit 7A [Source:HGNC Symbol;Acc:HGNC:16758]	12058	-0.2480640709400177	-0.46501812	Yes	
+row_108	MRPS30	mitochondrial ribosomal protein S30 [Source:HGNC Symbol;Acc:HGNC:8769]	12098	-0.2512543499469757	-0.46238482	Yes	
+row_109	NAGK	N-acetylglucosamine kinase [Source:HGNC Symbol;Acc:HGNC:17174]	12112	-0.2523612976074219	-0.45787346	Yes	
+row_110	SP140L	SP140 nuclear body protein like [Source:HGNC Symbol;Acc:HGNC:25105]	12168	-0.25686654448509216	-0.4562603	Yes	
+row_111	MFNG	MFNG O-fucosylpeptide 3-beta-N-acetylglucosaminyltransferase [Source:HGNC Symbol;Acc:HGNC:7038]	12244	-0.264597088098526	-0.45590684	Yes	
+row_112	SPG21	SPG21 abhydrolase domain containing, maspardin [Source:HGNC Symbol;Acc:HGNC:20373]	12298	-0.26896780729293823	-0.45389026	Yes	
+row_113	SPATS2L	spermatogenesis associated serine rich 2 like [Source:HGNC Symbol;Acc:HGNC:24574]	12326	-0.2719668745994568	-0.4499548	Yes	
+row_114	TRIM5	tripartite motif containing 5 [Source:HGNC Symbol;Acc:HGNC:16276]	12330	-0.2721964418888092	-0.44430283	Yes	
+row_115	XAF1	XIAP associated factor 1 [Source:HGNC Symbol;Acc:HGNC:30932]	12392	-0.27727922797203064	-0.44267765	Yes	
+row_116	MAPKAPK3	MAPK activated protein kinase 3 [Source:HGNC Symbol;Acc:HGNC:6888]	12412	-0.2792644798755646	-0.4380144	Yes	
+row_117	SLAMF8	SLAM family member 8 [Source:HGNC Symbol;Acc:HGNC:21391]	12421	-0.28012073040008545	-0.43254822	Yes	
+row_118	CCL8	C-C motif chemokine ligand 8 [Source:HGNC Symbol;Acc:HGNC:10635]	12437	-0.2813635766506195	-0.42755446	Yes	
+row_119	PRKACB	protein kinase cAMP-activated catalytic subunit beta [Source:HGNC Symbol;Acc:HGNC:9381]	12441	-0.28154098987579346	-0.4217011	Yes	
+row_120	CYTH4	cytohesin 4 [Source:HGNC Symbol;Acc:HGNC:9505]	12474	-0.2842046022415161	-0.4178585	Yes	
+row_121	DUS1L	dihydrouridine synthase 1 like [Source:HGNC Symbol;Acc:HGNC:30086]	12487	-0.28583282232284546	-0.41255447	Yes	
+row_122	C12orf4	chromosome 12 open reading frame 4 [Source:HGNC Symbol;Acc:HGNC:1184]	12540	-0.2926298677921295	-0.40995666	Yes	
+row_123	MANBAL	mannosidase beta like [Source:HGNC Symbol;Acc:HGNC:15799]	12551	-0.29396194219589233	-0.4043348	Yes	
+row_124	TEP1	telomerase associated protein 1 [Source:HGNC Symbol;Acc:HGNC:11726]	12560	-0.29510530829429626	-0.3985457	Yes	
+row_125	TRIM14	tripartite motif containing 14 [Source:HGNC Symbol;Acc:HGNC:16283]	12610	-0.29960599541664124	-0.3955836	Yes	
+row_126	PRPF19	pre-mRNA processing factor 19 [Source:HGNC Symbol;Acc:HGNC:17896]	12641	-0.30318978428840637	-0.39118922	Yes	
+row_127	DUSP23	dual specificity phosphatase 23 [Source:HGNC Symbol;Acc:HGNC:21480]	12664	-0.30507639050483704	-0.38618368	Yes	
+row_128	SSRP1	structure specific recognition protein 1 [Source:HGNC Symbol;Acc:HGNC:11327]	12677	-0.306268572807312	-0.38043925	Yes	
+row_129	CCND3	cyclin D3 [Source:HGNC Symbol;Acc:HGNC:1585]	12690	-0.3071756660938263	-0.3746753	Yes	
+row_130	CALCOCO2	calcium binding and coiled-coil domain 2 [Source:HGNC Symbol;Acc:HGNC:29912]	12719	-0.3099341094493866	-0.36999297	Yes	
+row_131	SRM	spermidine synthase [Source:HGNC Symbol;Acc:HGNC:11296]	12732	-0.3112742006778717	-0.36414066	Yes	
+row_132	TTLL12	tubulin tyrosine ligase like 12 [Source:HGNC Symbol;Acc:HGNC:28974]	12962	-0.33648496866226196	-0.37322077	Yes	
+row_133	CBFA2T3	CBFA2/RUNX1 partner transcriptional co-repressor 3 [Source:HGNC Symbol;Acc:HGNC:1537]	12987	-0.340554416179657	-0.3675933	Yes	
+row_134	PYCARD	PYD and CARD domain containing [Source:HGNC Symbol;Acc:HGNC:16608]	13002	-0.3430868089199066	-0.36119804	Yes	
+row_135	ZNF512B	zinc finger protein 512B [Source:HGNC Symbol;Acc:HGNC:29212]	13004	-0.34342265129089355	-0.35386848	Yes	
+row_136	HERC5	HECT and RLD domain containing E3 ubiquitin protein ligase 5 [Source:HGNC Symbol;Acc:HGNC:24368]	13030	-0.34830155968666077	-0.34814534	Yes	
+row_137	SP110	SP110 nuclear body protein [Source:HGNC Symbol;Acc:HGNC:5401]	13041	-0.34979966282844543	-0.3413202	Yes	
+row_138	CH25H	cholesterol 25-hydroxylase [Source:HGNC Symbol;Acc:HGNC:1907]	13080	-0.3557073473930359	-0.33636457	Yes	
+row_139	TTC38	tetratricopeptide repeat domain 38 [Source:HGNC Symbol;Acc:HGNC:26082]	13081	-0.35583001375198364	-0.3286963	Yes	
+row_140	MAN1C1	mannosidase alpha class 1C member 1 [Source:HGNC Symbol;Acc:HGNC:19080]	13091	-0.35728538036346436	-0.3216385	Yes	
+row_141	FBXO41	F-box protein 41 [Source:HGNC Symbol;Acc:HGNC:29409]	13151	-0.365895539522171	-0.31796098	Yes	
+row_142	BATF2	basic leucine zipper ATF-like transcription factor 2 [Source:HGNC Symbol;Acc:HGNC:25163]	13296	-0.3867736756801605	-0.31989545	Yes	
+row_143	KATNB1	katanin regulatory subunit B1 [Source:HGNC Symbol;Acc:HGNC:6217]	13298	-0.38684508204460144	-0.31163007	Yes	
+row_144	SMCO4	single-pass membrane protein with coiled-coil domains 4 [Source:HGNC Symbol;Acc:HGNC:24810]	13359	-0.395143985748291	-0.30739355	Yes	
+row_145	RILP	Rab interacting lysosomal protein [Source:HGNC Symbol;Acc:HGNC:30266]	13387	-0.40036988258361816	-0.30069098	Yes	
+row_146	IFI6	interferon alpha inducible protein 6 [Source:HGNC Symbol;Acc:HGNC:4054]	13393	-0.402214914560318	-0.29237968	Yes	
+row_147	VSIG10L	V-set and immunoglobulin domain containing 10 like [Source:HGNC Symbol;Acc:HGNC:27111]	13397	-0.40260401368141174	-0.28391734	Yes	
+row_148	DCPS	decapping enzyme, scavenger [Source:HGNC Symbol;Acc:HGNC:29812]	13402	-0.40330687165260315	-0.27551118	Yes	
+row_149	RTP4	receptor transporter protein 4 [Source:HGNC Symbol;Acc:HGNC:23992]	13407	-0.40464669466018677	-0.26707613	Yes	
+row_150	HDHD5	haloacid dehalogenase like hydrolase domain containing 5 [Source:HGNC Symbol;Acc:HGNC:1843]	13423	-0.4062967300415039	-0.25939003	Yes	
+row_151	PARP9	poly(ADP-ribose) polymerase family member 9 [Source:HGNC Symbol;Acc:HGNC:24118]	13426	-0.4068284332752228	-0.25076535	Yes	
+row_152	ST6GAL1	ST6 beta-galactoside alpha-2,6-sialyltransferase 1 [Source:HGNC Symbol;Acc:HGNC:10860]	13459	-0.4118863046169281	-0.24417117	Yes	
+row_153	DNMT1	DNA methyltransferase 1 [Source:HGNC Symbol;Acc:HGNC:2976]	13483	-0.4164585769176483	-0.2368366	Yes	
+row_154	STAC3	SH3 and cysteine rich domain 3 [Source:HGNC Symbol;Acc:HGNC:28423]	13497	-0.41853758692741394	-0.22874406	Yes	
+row_155	SUOX	sulfite oxidase [Source:HGNC Symbol;Acc:HGNC:11460]	13523	-0.4250268042087555	-0.22136748	Yes	
+row_156	NF2	NF2, moesin-ezrin-radixin like (MERLIN) tumor suppressor [Source:HGNC Symbol;Acc:HGNC:7773]	13576	-0.4373821020126343	-0.21565017	Yes	
+row_157	TIFA	TRAF interacting protein with forkhead associated domain [Source:HGNC Symbol;Acc:HGNC:19075]	13578	-0.43798738718032837	-0.20628269	Yes	
+row_158	GBP5	guanylate binding protein 5 [Source:HGNC Symbol;Acc:HGNC:19895]	13613	-0.4473777115345001	-0.19906628	Yes	
+row_159	TRIB2	tribbles pseudokinase 2 [Source:HGNC Symbol;Acc:HGNC:30809]	13645	-0.45267385244369507	-0.1915218	Yes	
+row_160	CYSLTR1	cysteinyl leukotriene receptor 1 [Source:HGNC Symbol;Acc:HGNC:17451]	13651	-0.45326754450798035	-0.18211028	Yes	
+row_161	MYOF	myoferlin [Source:HGNC Symbol;Acc:HGNC:3656]	13743	-0.47485360503196716	-0.1783668	Yes	
+row_162	UBA7	ubiquitin like modifier activating enzyme 7 [Source:HGNC Symbol;Acc:HGNC:12471]	13762	-0.4780154824256897	-0.16934906	Yes	
+row_163	POLD1	DNA polymerase delta 1, catalytic subunit [Source:HGNC Symbol;Acc:HGNC:9175]	13765	-0.4787728190422058	-0.15917395	Yes	
+row_164	SNX20	sorting nexin 20 [Source:HGNC Symbol;Acc:HGNC:30390]	13801	-0.4889788031578064	-0.15113235	Yes	
+row_165	SHISA5	shisa family member 5 [Source:HGNC Symbol;Acc:HGNC:30376]	13817	-0.4919207692146301	-0.141601	Yes	
+row_166	STAT1	signal transducer and activator of transcription 1 [Source:HGNC Symbol;Acc:HGNC:11362]	13825	-0.4940304458141327	-0.13145366	Yes	
+row_167	MAP3K21	mitogen-activated protein kinase kinase kinase 21 [Source:HGNC Symbol;Acc:HGNC:29798]	13884	-0.5126172304153442	-0.124542914	Yes	
+row_168	IMP4	IMP U3 small nucleolar ribonucleoprotein 4 [Source:HGNC Symbol;Acc:HGNC:30856]	13894	-0.515006959438324	-0.11408616	Yes	
+row_169	ENPP2	ectonucleotide pyrophosphatase/phosphodiesterase 2 [Source:HGNC Symbol;Acc:HGNC:3357]	13914	-0.520706295967102	-0.10421974	Yes	
+row_170	BST2	bone marrow stromal cell antigen 2 [Source:HGNC Symbol;Acc:HGNC:1119]	13926	-0.5286927819252014	-0.09361068	Yes	
+row_171	ADCY7	adenylate cyclase 7 [Source:HGNC Symbol;Acc:HGNC:238]	13943	-0.5347822308540344	-0.08322697	Yes	
+row_172	PSMB8	proteasome 20S subunit beta 8 [Source:HGNC Symbol;Acc:HGNC:9545]	13977	-0.5541689395904541	-0.07363786	Yes	
+row_173	PRMT5	protein arginine methyltransferase 5 [Source:HGNC Symbol;Acc:HGNC:10894]	13995	-0.5637233257293701	-0.06270177	Yes	
+row_174	EVL	Enah/Vasp-like [Source:HGNC Symbol;Acc:HGNC:20234]	14004	-0.5723110437393188	-0.050938774	Yes	
+row_175	PDZD11	PDZ domain containing 11 [Source:HGNC Symbol;Acc:HGNC:28034]	14038	-0.583605170249939	-0.040715292	Yes	
+row_176	CALHM6	calcium homeostasis modulator family member 6 [Source:HGNC Symbol;Acc:HGNC:33391]	14137	-0.6589633822441101	-0.033503383	Yes	
+row_177	RABGGTA	Rab geranylgeranyltransferase subunit alpha [Source:HGNC Symbol;Acc:HGNC:9795]	14188	-0.768876850605011	-0.020499606	Yes	
+row_178	IRF8	interferon regulatory factor 8 [Source:HGNC Symbol;Acc:HGNC:5358]	14200	-0.9876450896263123	5.881884E-8	Yes	

@@ -1,0 +1,970 @@
+---
+title: "Differential Gene Expression"
+author: "Ioana-Beatrice Neamtu" 
+output: html_notebook
+---
+
+```{r include= FALSE}
+setwd("/home/ioana/Desktop/MMB5010_IOANA_NEAMTU_DISSERTATION_SUBMISSION/R_DEG_ANALYSIS_PIPELINE/")
+```
+
+```{r include= FALSE}
+# ENVIRONMENT SETUP (R 4.0.3). 
+# CRAN (The Comprehensive R Archive Network) and Bioconductor (BiocManager version 3.17)
+
+# For differential analysis of count data.
+library(DESeq2) #version 1.40.2
+# To load the tidyverse packages dplyr 1.1.4 and ggplot2 3.5.1.
+library(tidyverse) #version 2.0.0
+# To use with tidyverse ggplot2 to prevent overlapping labels.
+library(ggrepel) #version 0.9.5
+# To draw clustered heatmaps.
+library(pheatmap) #version 1.0.12
+# Produces publication-ready volcano plots.
+library(EnhancedVolcano) #version 1.18.0
+# Provides an interface for querying SQLite data storage annotation database OrgDb.
+library(AnnotationDbi) #version 1.66.0
+# Bioconductor annotation data package.
+library(org.Hs.eg.db) #version 3.17.0
+# To analyze and visualize functional profiles of gene and gene clusters.
+library(clusterProfiler) #version 4.8.3
+# For consistent, tidy string manipulation and text formatting.
+library(stringr) #version 1.5.1
+```
+
+***   
+
+## ANALYSIS OF MEDIA vs LPS (Lipopolysaccharide) TREATED MONOCYTES using the Bioconductor _DESeq2_ Vignette (Love _et al.,_ 2024,  [link](https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html))     
+
+```{r echo= TRUE, include= FALSE}
+# Loading and cleaning counts table and samples metadata. Used stringent filters due to large sample size.
+
+# 56284 observations.
+data <- read.csv("LPSvsMEDIA_counts.csv", row.names=1) 
+# 20576 observations; approximately 63.5% of initial observations were removed.
+data <- na.omit(data[rowSums(data) >= 100, ]) 
+
+meta <- read.csv("LPSvsMEDIA_sample_info.csv", row.names=1, sep=";")
+
+# Checking that sample names match in both files and are in same order to fit DESeq2 model; Both output TRUE.
+all(colnames(data) %in% rownames(meta))
+all(colnames(data) == rownames(meta))
+```
+
+### **Building DESeqDataSet Object and Count Normalization**    
+
+##### Bioconductor _**DESeq2**_ package (Love _et al.,_ 2014) was used to estimate the relationship between **variance** and **mean** in the high-throughput sequencing experimental count data, and to assess **differential expression** using a model based on the **negative binomial distribution**.      
+ 
+##### The **DESeqDataSet** object **dds** stored read counts and intermediate calculations for differential expression analysis.    
+   
+  * **DESeqDataSetFromMatrix** : Created a **DESeqDataSet object** from a matrix (pre-loaded data) of non-negative integer count values for differential expression analysis.     
+  * **estimateSizeFactors**: **Size factors** ensured that **variations** in gene expression between samples reflected true biological differences rather than technical issues, such as varying                              sequencing depths.    
+
+```{r include= FALSE}
+# For Quality Control (QC) purposes, general exploration of all factor levels without any discrimination was performed, where set reference level was media as growth condition.
+dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ relevel(condition, ref = "media"))
+
+# Investigating size factors.
+dds <- estimateSizeFactors(dds)
+data.frame(Sample = names(sizeFactors(dds)), SizeFactor = sizeFactors(dds))
+```
+```{r echo= FALSE, warning= FALSE, message= FALSE}
+plot(sizeFactors(dds), main = "LPS vs Media - Size Factors", ylab = "sizeFactors(dds)", xlab = "Index")
+text(x = 39, y = 0.0758, labels = "S3013L (0.0758)", pos = 3, col = "darkred")
+text(x = 63, y = 0.4541, labels = "S1052M (0.4541)", pos = 3, col = "darkred")
+text(x = 83, y = 0.0868, labels = "S3013M (0.0868)", pos = 3, col = "darkred")
+text(x = 85, y = 0.5376, labels = "S3032M (0.5376)", pos = 3, col = "darkred")
+text(x = 42, y = 1.45, labels = "S3019L (1.6195)", pos = 3, col = "darkred")
+highlight_vals <- c(0.0758, 0.4541, 0.0868, 0.5376, 1.6195)
+for (val in highlight_vals) {
+  index <- which(round(sizeFactors(dds), 4) == val)
+  if (length(index) > 0) {
+    points(index, rep(val, length(index)), col = "darkred", pch = 21, bg = "white", lwd = 2)
+  }
+}
+```
+
+* Size factors fell around 1, with exception of S3013L (0.07576956), S1052M (0.45409687), S3013M (0.08675980), S3032M (0.53764182) and S3019L (1.61950669).   
+
+##### _**DEseq2**_ used **non-normalized** gene count data and adjusted for library size differences internally.    
+
+```{r include= FALSE}
+# Writing count files.
+unnormalized_counts <- counts(dds, normalized=FALSE)
+write.table(unnormalized_counts, file="LPSvsMedia_unnormalised_counts.txt", sep="\t", quote=F, col.names=NA)
+normalized_counts <- counts(dds, normalized=TRUE)
+write.table(normalized_counts, file="LPSvsMedia_normalised_counts.txt", sep="\t", quote=F, col.names=NA)
+```
+
+### **Quality Control Assessment**    
+
+#### _Variance Exploration_     
+  
+##### Before **clustering**, it was necessary to remove **variance** dependence on the mean. _DESeq2_ offered **rlog()** and **vst()** functions, with vst() being preferred for its speed. Both methods ignore the design formula by default, but if large count differences are expected, the blind parameter should be set to FALSE. Here, blind=TRUE: unbiased by the experimental design or known sources of variation (McDonnell Genome Institute - Washington University: Genomic Visualization and Interpretations, [link](https://genviz.org/module-04-expression/0004/02/01/DifferentialExpression/)).    
+
+  * **Principal Component Analysis (PCA)** statistical tool was used for the exploration data stratification without relying on strong initial assumptions (Love _et al.,_ 2014,  [link](https://bioconductor.org/packages/release/bioc/manuals/DESeq2/man/DESeq2.pdf); Giuliani, 2017).     
+  * **Loadings** are the coefficients that indicated how much each original variable contributed to a principal component in PCA.   
+  * **_ggplot2_** (Wickham, 2016) package of the **_tidyverse_** (Wickham _et al.,_ 2019) library and **CRAN** library **_ggrepel_** (Slowikowski, 2014) were used for visualization of PCA data derived through _DESeq2_ library function **plotPCA**.   
+
+```{r include= FALSE}
+# Removing the dependence of the variance on the mean through variance stabilizing transformation.
+rld <- vst(dds, blind=TRUE) 
+# Performing  PCA on the variance-stabilized data using prcomp() function from stats developed by the R Core Team (https://www.R-project.org).
+pca_res <- prcomp(assay(rld), scale. = TRUE)
+# Calculating variances of each PC.
+var_explained <- pca_res$sdev^2 / sum(pca_res$sdev^2)
+# Getting the loadings for PC1.
+loadings <- pca_res$rotation[, 1]
+# Sorting the loadings to find genes with the highest contribution.
+sorted_loadings <- sort(loadings, decreasing = TRUE)
+# Creating a data frame of genes and their loadings.
+loading_df <- data.frame(Gene = names(sorted_loadings), Loading = sorted_loadings)
+# Writing the loading information to a CSV file.
+write.csv(loading_df, file = "LPSvsMedia_PCA_loadings_PC1.csv", row.names = FALSE)
+```
+
+``` {r echo= FALSE, warning= FALSE, message= FALSE, fig.width= 10, fig.height= 10}
+# Plotting PCA (labelled).
+pcaData <- plotPCA(rld, intgroup = "condition", returnData = TRUE)
+
+ggplot(pcaData, aes_string(x = "PC1", y = "PC2", color = "condition")) +
+  geom_point() +
+  geom_text_repel(aes(label = rownames(pcaData)), size = 5) +  
+  ggtitle("LPS vs Media: PCA Plot") +
+  xlab(paste0("PC1: ", round(100 * attr(pcaData, "percentVar")[1], 2), "% variance")) +
+  ylab(paste0("PC2: ", round(100 * attr(pcaData, "percentVar")[2], 2), "% variance"))
+```
+##### **Scree plot**: Illustrated the proportion of variance accounted for by each principal component, facilitating the determination of the number of components required to capture the majority of the data's variability. A marked decline in the plot suggests that a limited number of components are sufficient for effective dimensionality reduction.       
+
+```{r echo= FALSE, warning= FALSE, message= FALSE}
+# Scree plot of descending eigenvalues (linear transformations).
+plot(var_explained, xlab = "Principal Component", ylab = "Proportion of Variance Explained", type = 'b', pch = 19, main = "LPS vs Media: Variance Scree Plot", ylim = c(0, 0.5))
+```
+
+##### Plotting **Sparsity** using _DESeq2_ library function **plotSparsity**: proportion of zero counts across all genes or transcripts in the dataset.    
+```{r echo= FALSE, warning= FALSE, message= FALSE}
+plotSparsity(dds, normalized = TRUE)
+```
+
+#### _Visual Heatmaps of Hierarchical Clustering at different levels_      
+#####  **_pheatmap_** library (Kolde, 2019) : heatmap illustrating high-dimensioal matrix values through gradients of colors and dendogram to show the relationships and patterns between rows and columns of data. Used to help identify clusters, trends, and correlations among variables.     
+
+```{r echo= FALSE, warning= FALSE, message= FALSE, fig.width= 10, fig.height= 10}
+# rld assay for correlation of samples.
+rld_mat <- assay(rld)
+rld_cor <- cor(rld_mat)
+#  Hierarchical clustering using sample names and growth conditions.
+pheatmap(rld_cor, labels_row = paste0(colnames(dds)), labels_col = paste0(dds$condition), fontsize_row = 5, fontsize_col = 6, main = "Heatmap of Correlated Samples using Matrix Data Values - LPS vs Media") 
+```
+
+***   
+
+### **DIFFERENTIAL EXPRESSION**   
+
+#### _DESeq with Wald Test_   
+
+##### **Negative Binomial General Linear Model fitting and Wald statistics**: employed to test for significance of coefficients, using sizeFactors and dispersion estimates.  
+##### **Gamma-Poisson distribution formula** as per _DESeq2_ documentation (Love _et al.,_ 2014):     
+
+\[
+K_{ij} \sim \text{NB}(\mu_{ij}, \alpha_i)
+\]
+
+\[
+\mu_{ij} = s_j q_{ij}
+\]
+
+\[
+\log_2(q_{ij}) = x_{j.} \beta_i
+\]
+  
+###### Counts \(K_{ij}\) for gene \(i\) and sample \(j\) are modeled with a Negative Binomial distribution, having a mean \(\mu_{ij}\) and gene-specific dispersion \(\alpha_i\). The mean \(\mu_{ij}\) is the product of a sample-specific size factor \(s_j\) and a parameter \(q_{ij}\), which is proportional to the expected concentration of fragments for sample \(j\). The coefficients \(\beta_i\) represent the log2 fold changes for gene \(i\) in each column of the model matrix \(X\) (Love, 2014).    
+
+##### **Wald test** **nbinomWaldTest()** function evaluated whether the $\mathrm{log}_2 \mathrm{FC}$ of gene expression between conditions is significantly different from zero.    
+
+```{r include= FALSE}
+# Building specific data structure to hold count data, experimental design, and other relevant information.
+
+# Reference factor level (comparing LPS treated monocytes to controls).
+dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ relevel(condition, ref = "media")) 
+
+# Running analysis with Wald test (assessing whether estimated coefficient (log2 fold change) for media vs LPS is significantly different from zero).
+
+# DESeq2 fits a generalized linear model for each gene's count data, based on the negative binomial distribution, using DESeq() function to perform differential analysis.
+dds <- DESeq(dds)
+
+# Wald statistics.
+Wald <- nbinomWaldTest(dds)
+results(Wald)
+```
+
+```{r echo= FALSE, warning= FALSE, message= FALSE}
+summary(results(Wald))
+```
+
+##### **Raw and Normalized counts** investigation:     
+
+```{r echo= FALSE, warning= FALSE, message= FALSE, results= 'hide'}
+# Extracting counts matrix and calculating raw column sums using R base function colSums().
+col_sums <- colSums(counts(dds, normalized= FALSE))
+# Filtering raw column sums less than 5,000,000 to reduce technical variation and identify outliers.
+filtered_col_sums <- col_sums[col_sums < 5000000]
+print(filtered_col_sums)
+# Plotting total number of raw counts per sample.
+plot(col_sums, main = "Total Raw Counts per Sample - LPS vs Media")
+```
+
+```{r echo= FALSE, warning= FALSE, message= FALSE, results= 'hide'}
+# Extracting counts matrix and calculating normalized column sums.
+col_sums_normalized <- colSums(counts(dds, normalized= TRUE))
+# Filtering normalized column sums less than 5,000,000.
+filtered_col_sums_normalized <- col_sums_normalized[col_sums_normalized < 5000000] 
+# Identified 0 counts bellow threshold.
+print(filtered_col_sums_normalized)
+# Plotting total number of normalized counts per sample.
+plot(col_sums_normalized, main = "Total Normalized Counts per Sample - LPS vs Media")
+```
+
+### **Dispersion Estimators of Alternative $\mathrm{log}_2 \mathrm{FC}$ Shrinkage**     
+
+##### **dds** additionally retained the design formula used for estimating **dispersion** and  **$\mathrm{log}_2 \mathrm{FC}$** in the model to reflect the variance of the distribution, using the The Cox-Reid Adjusted Profile Likelihood (APL) method (McCarthy _et al.,_ 2012; Landau and Liu, 2013).         
+
+#### _Types Normal, Ashr and Apeglm_    
+```{r echo= FALSE, warning= FALSE, message= FALSE, fig.width= 10}
+# Looking at dispersion estimates for diagnosis: plotted the per-gene dispersion estimates together with the fitted mean-dispersion relationship, using DESeq2 function plotDispEsts().
+plotDispEsts(dds, ylim = c(1e-6, 1e2), main = "Dispersion Estimates for LPS vs Media in Monocytes: Fitted Mean-Dispersion Relationship")
+# Defining pair-wise contrasts: media set as base level; coef = 2 (2 levels).
+contrast_condition <- c("condition", "LPS", "media") 
+```
+#### _DESeq2_ package **lfcShrink** function shrinks $\mathrm{log}_2 \mathrm{FC}$ estimates to improve reliability, particularly for genes with low counts or high variability.     
+  * **Normal** shrinkage is basic and often less accurate; uses the posterior mean from the Maximum Likelihood Estimate; _DESeq2_ default method (Love _et al.,_ 2014); introduces more bias than **ashr** and **apeglm** shrinkage estimators (Zhu _et al.,_ 2018).   
+  * **Ashr** adaptive shrinkage based on gene-specific information; more flexible in estimates uncertainty (Stephens _et al.,_ 2023).     
+  * **Apeglm** (approximate posterior estimation for generalized linear models) most precise method, applying Bayesian shrinkage; typically recommended for robust differential expression results (Zhu _et al.,_ 2018).      
+
+```{r include=  FALSE}
+# Saving corrected (shrunk) log2FC.
+DGE_table_condition_normal <- lfcShrink(dds, coef=2, type="norm")
+DGE_table_condition_ashr <- lfcShrink(dds, contrast=contrast_condition, coef=2, type="ashr")
+DGE_table_condition_apeglm <- lfcShrink(dds, coef="relevel.condition..ref....media..LPS", type="apeglm") 
+```
+
+##### **MA plots** (M log ratio versus A mean average) for each shrinkage method (**normal, ashr, apeglm**) showed $\mathrm{log}_2 \mathrm{FC}$ versus mean expression, helping to visualize and compare differential expression with stabilized estimates. Plotted scatter plots of $\mathrm{log}_2 \mathrm{FC}$s (on the y-axis) versus the mean of normalized counts (on the x-axis) using _DESeq2_ function **plotMA()**.     
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 20, fig.height= 10}
+par(mfrow=c(1,3), mar=c(4,4,2,1), cex.main=2, cex.lab=2, cex.axis=2)
+xlim <- c(1,1e5); ylim <- c(-3,3)
+
+plotMA(DGE_table_condition_normal, xlim=xlim, ylim=ylim, main="Type normal LPS vs Media")
+plotMA(DGE_table_condition_ashr, xlim=xlim, ylim=ylim, main="Type ashr LPS vs Media")
+plotMA(DGE_table_condition_apeglm, xlim=xlim, ylim=ylim, main="Type apeglm LPS vs Media") 
+```
+
+##### Further results explorations revealed comparable results between shrinkage estimation methods.
+```{r echo= TRUE, warning= FALSE, message= FALSE}
+summary(DGE_table_condition_normal)
+summary(DGE_table_condition_ashr)
+summary(DGE_table_condition_apeglm)
+```
+
+``` {r include= FALSE}
+# Exploring results in DESeqResults object.
+mcols(DGE_table_condition_ashr, use.names=T) 
+# Making ashr type data frame using dplyr package of the tidyverse library; more robust and reliable than type normal, comparable to type apeglm, with no value warnings when running on both filtered and unfiltered data.
+DGE_table_condition_ashr %>% data.frame()
+# Saving results as data frame table.
+DGE_table_condition_df <- data.frame(DGE_table_condition_ashr)
+write.table(DGE_table_condition_df, file="DGE_results_LPS_vs_media_Type_ashr.txt", sep="\t", quote=F, col.names=NA)
+
+# Subsetting the tibble table - CRAN package dplyr (Wickham et al., 2023).
+sigDE_table_condition <- DGE_table_condition_df %>%
+  dplyr::filter(padj <= 0.01) 
+
+# Ordering highest to lowest Log2FoldChange values.
+sigDE_table_condition <- sigDE_table_condition[order(sigDE_table_condition$log2FoldChange, decreasing = TRUE), ]
+# Top 5 high and low log2FC values.
+# HIGH
+head(sigDE_table_condition, 5)
+# LOW
+tail(sigDE_table_condition, 5)
+
+# Saving table of significant DEGs ordered by LFC value.
+write.table(sigDE_table_condition, file="sigDE_padj<=0.01_LPS_vs_media_table_condition_Type_ashr.txt", sep="\t", quote=F, col.names=NA)
+
+# Filtering significant results and MA Plot Visualization (where src = shrunken results with contrast).
+src <- na.omit(subset(DGE_table_condition_ashr, padj <= 0.01))
+```
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 10}
+plotMA(src, ylim = c(-3,3), main="MA Plot with Type ashr Shrinkage and Contrast padj <= 0.01 - LPS vs Media")  
+```
+##### Summary statistics for filtered, significant results (where src = shrunken results with contrast; _padj_ ≤ 0.01)
+```{r echo= FALSE}
+# Converting data frame into tibble with explicitly presented "gene" names in a column for further analysis and  visualization.
+src_tb <- src %>%
+  data.frame() %>%
+  rownames_to_column(var = "symbol") %>%
+  as_tibble()
+
+# Further exploring results.
+summary(DGE_table_condition_ashr)
+summary(src_tb)
+```
+#### _Enhanced Volcano Plot Visualization_    
+
+##### The resulting **Volcano** plot visualized the significance and direction (up or downregulated) of gene expression changes between conditions, helping identify significant genes with large fold changes. To achieve this, the Bioconductor **_EnhancedVolcano_** package (Blighe _et al.,_ 2023, [link](https://bioconductor.org/packages/devel/bioc/vignettes/EnhancedVolcano/inst/doc/EnhancedVolcano.html)) was employed.   
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.height= 20, fig.width= 20}
+EnhancedVolcano(DGE_table_condition_df,
+    title = "LPS vs Media: Differentially Expressed Genes",
+    lab = rownames(DGE_table_condition_df),
+    x = 'log2FoldChange',
+    y = 'pvalue',
+    labSize = 9,       
+    titleLabSize = 38, 
+    axisLabSize = 24,   
+    captionLabSize = 30   
+)
+```
+```{r include= FALSE}
+# MA plot of highly significant results, using the ggplot2 package
+ggplot(src_tb, aes(x = baseMean, y = log2FoldChange)) +
+  geom_point() +
+  labs(title = "MA Plot with Type ashr Shrinkage and Contrast - LPS vs Media (padj <= 0.01)", x = "Base Mean", y = "Log2 Fold Change")
+```
+
+*** 
+
+### **PATHWAY ANALYSIS**      
+#### _Annotation_     
+##### Using **_AnnotationDbi_** (Pagès _et al.,_ 2023, [link](https://jorainer.github.io/ensembldb/reference/EnsDb-AnnotationDbi.html)) virtual base class function **mapIds** to map gene symbols to **ENSEMBL IDs** (Harrison _et al.,_ 2024, [link](https://www.ensembl.org/index.html)), for integrating and managing **gene annotations** effectively for further analysis.     
+
+* **Mapping Gene Symbols to ENSEMBL IDs**: Employing the **_org.Hs.eg.db_** (Carlson, 2023) package to convert **gene symbols** to ENSEMBL IDs, storing these IDs in a new column.   
+* **Adding Gene Symbols**: Creating a column in the data frame to store the original gene symbols for reference.      
+* **Handling Multiple ENSEMBL IDs**: Concatenating any multiple ENSEMBL IDs associated with a gene symbol into a single, comma-separated string.      
+* **Filtering for Reliability**: Retained only rows with valid gene symbols and ENSEMBL IDs, and filtered on **baseMean > 50** to exclude low-expression noise, ensuring biological relevance in downstream analyses.
+
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+src_tb$ensgene <- src_tb$symbol
+src_tb$ensgene <- mapIds(org.Hs.eg.db, 
+                                         keys = src_tb$ensgene, 
+                                         column = "ENSEMBL", 
+                                         keytype = "SYMBOL", 
+                                         multiVals = "first")
+# Saving annotated version.
+write.table(src_tb, file="sig_DGE_results_LPS_vs_media_annotated.txt", sep="\t", quote=F, col.names=NA)
+
+# Only retaining results with valid gene symbols and filtering on Base Mean to exclude noise.
+src_tb_LPSvsMedia <- na.omit(subset(src_tb, symbol != "" & symbol != "NA" & ensgene != "" & ensgene != "NA" & baseMean > 50))
+
+# Further exploring results. Reduction from 4490 to 2616 observations (41.5%).
+summary(src_tb_LPSvsMedia)
+```
+
+##### **STRING** (Search Tool for the Retrieval of Interacting Genes/Proteins) (Szklarczyk _et al.,_ 2023, [link](https://string-db.org/)): web database that consolidates known and predicted protein-protein interactions (PPIs), enabling the study and visualization of protein networks across organisms.    
+
+* **Exporting Differentially Expressed Genes**: Segregated and sorted upregulated ($\mathrm{log}_2 \mathrm{FC} > 0$) and downregulated ($\mathrm{log}_2 \mathrm{FC} < 0$) genes by effect size, then exported full tables and individual gene symbol and ENSEMBL ID lists for use in downstream applications in STRING network analysis.
+
+  +  Selected the top 100 DEGs per condition to balance biological relevance and network interpretability, applying consistent criteria across all STRING analyses.
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+# Upregulated
+src_tb_up_LPSvsMedia <- subset(src_tb_LPSvsMedia, log2FoldChange > 0)
+
+# Sorting descending by log2FC.
+src_tb_up_LPSvsMedia<- src_tb_up_LPSvsMedia[order(src_tb_up_LPSvsMedia$log2FoldChange, decreasing = TRUE), ] 
+
+write.csv(src_tb_up_LPSvsMedia, file = "DGE_UP_LPSvsMEDIA.csv")
+write.table(src_tb_up_LPSvsMedia[, 6], "DGE_UP_LPSvsMEDIA_gene_ensemblID.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(src_tb_up_LPSvsMedia[, 1], "DGE_UP_LPSvsMEDIA_gene_symbols.txt", row.names = FALSE, col.names = FALSE) 
+head(src_tb_up_LPSvsMedia$symbol, 100) 
+```
+Permalink STRING Output LPS vs Media Upregulated [link](https://version-12-0.string-db.org/cgi/network?networkId=bh5XmeUb8ZLd)
+
+
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+# Downregulated
+src_tb_down_LPSvsMedia <- subset(src_tb_LPSvsMedia, log2FoldChange < 0)
+
+# Sorting descending by log2FC.
+src_tb_down_LPSvsMedia<- src_tb_down_LPSvsMedia[order(src_tb_down_LPSvsMedia$log2FoldChange, decreasing = FALSE), ] 
+
+write.csv(src_tb_down_LPSvsMedia, file = "DGE_DOWN_LPSvsMEDIA.csv")
+write.table(src_tb_down_LPSvsMedia[, 6], "DGE_DOWN_LPSvsMEDIA_gene_ensemblID.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(src_tb_down_LPSvsMedia[, 1], "DGE_DOWN__LPSvsMEDIA_gene_symbols.txt", row.names = FALSE, col.names = FALSE)
+head(src_tb_down_LPSvsMedia$symbol, 100) 
+```
+Permalink STRING Output LPS vs Media Downregulated [link](https://version-12-0.string-db.org/cgi/network?networkId=bqKQz1zwmH2w)
+
+### **GO Enrichment Analysis**      
+##### **GO (Gene Ontology) Enrichment Analysis** (Harris _et al.,_ 2004): **_clusterProfiler_** package (Yu _et al.,_ 2012; Wu _et al.,_ 2021; Xu _et al.,_ 2024, [link](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)), for statistical analysis and visualization of functional profiles for genes and gene clusters, function **enrichGO** takes a gene vector, using gene symbols as keys, and returns the enriched GO categories, adjusted for false discovery rate (**FDR**).    
+
+* **OrgDb** = "org.Hs.eg.db" specifies the organism (human genes) database to use for annotations:        
+
+  + **Biological Process (BP)**: Describes biological objectives/ processes that a gene/ gene product is involved in      
+  + **Cellular Component (CC)**: Indicates locations within cells where a gene product is active or located     
+  + **Molecular Function (MF)**: Describes specific biochemical activities/functions of a gene product at the molecular level     
+  
+##### Visualized the top 10 **enriched GO terms** for each ontology to understand which **biological processes**, **cellular components**, and **molecular functions** are most significantly associated with the gene set. Results visualized with Bar Plots were further corroborated during **Gene Set Enrichment Analysis (GSEA)** (Mootha _et al.,_ 2003; Subramanian _et al.,_ 2005). 
+
+#### _Upregulated genes_      
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 10}
+GO_results_pos_BP <- enrichGO(gene = src_tb_up_LPSvsMedia$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "BP")
+GO_res_pos_df_BP <- as.data.frame(GO_results_pos_BP)
+
+GO_results_pos_CC <- enrichGO(gene = src_tb_up_LPSvsMedia$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "CC")
+GO_res_pos_df_CC <- as.data.frame(GO_results_pos_CC)
+
+GO_results_pos_MF <- enrichGO(gene = src_tb_up_LPSvsMedia$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "MF")
+GO_res_pos_df_MF <- as.data.frame(GO_results_pos_MF)
+
+barplot(GO_results_pos_BP, showCategory = 10) + 
+  ggtitle("GO +ve BP (padj <= 0.01) - LPS vs Media-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+
+barplot(GO_results_pos_CC, showCategory = 10) + 
+  ggtitle("GO +ve CC (padj <= 0.01) - LPS vs Media-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+
+barplot(GO_results_pos_MF, showCategory = 10) + 
+  ggtitle("GO +ve MF (padj <= 0.01) - LPS vs Media-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 25, fig.height= 18}
+# Combining all the GO result data frames.
+all_GO <- rbind(GO_res_pos_df_BP, GO_res_pos_df_CC, GO_res_pos_df_MF)
+
+# Sort by adjusted p-value.
+top10_GO <- all_GO %>%
+  arrange(p.adjust) %>%
+  slice(1:10)
+top10_GO$Description <- str_wrap(top10_GO$Description, width = 30)
+
+# Retrieving the top 10 by adjusted p-value.
+ggplot(top10_GO, aes(x = reorder(Description, p.adjust), 
+                     y = Count, 
+                     fill = -log10(p.adjust))) +
+  geom_bar(stat = "identity") +
+  scale_fill_gradient(high = "#E06663", low = "#327EBA") +
+  labs(title = "LPS vs Media: Positively Enriched Gene Ontology Terms (BP, CC, MF)",
+       x = "GO Term",
+       y = "Gene Count",
+       fill = "-log10(Adjusted p-value)") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 30, hjust = 0.5),
+    axis.text.x = element_text(size = 25, angle = 85, hjust = 1),
+    axis.text.y = element_text(size = 25),
+    axis.title = element_text(size = 25),
+    legend.title = element_text(size = 25),
+    legend.text = element_text(size = 24)
+  )
+```
+
+
+#### _Downregulated genes_
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 12}
+GO_results_neg_BP <- enrichGO(gene = src_tb_down_LPSvsMedia$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "BP")
+GO_res_neg_df_BP <- as.data.frame(GO_results_neg_BP)
+
+GO_results_neg_CC <- enrichGO(gene = src_tb_down_LPSvsMedia$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "CC")
+GO_res_neg_df_CC <- as.data.frame(GO_results_neg_CC)
+
+GO_results_neg_MF <- enrichGO(gene = src_tb_down_LPSvsMedia$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "MF")
+GO_res_neg_df_MF <- as.data.frame(GO_results_neg_MF)
+
+barplot(GO_results_neg_BP, showCategory = 10) + 
+  ggtitle("GO -ve BP (padj <= 0.01) - LPS vs Media-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+
+barplot(GO_results_neg_CC, showCategory = 10) + 
+  ggtitle("GO -ve CC (padj <= 0.01) - LPS vs Media-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+
+barplot(GO_results_neg_MF, showCategory = 10) + 
+  ggtitle("GO -ve MF (padj <= 0.01) - LPS vs Media-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 25, fig.height= 18}
+all_GO<- rbind(GO_res_neg_df_BP, GO_res_neg_df_CC, GO_res_neg_df_MF)
+
+top10_GO <- all_GO %>%
+  arrange(p.adjust) %>%
+  slice(1:10)
+top10_GO$Description <- str_wrap(top10_GO$Description, width = 30)
+
+ggplot(top10_GO, aes(x = reorder(Description, p.adjust), 
+                     y = Count, 
+                     fill = -log10(p.adjust))) +
+  geom_bar(stat = "identity") +
+  scale_fill_gradient(high = "#E06663", low = "#327EBA") +
+  labs(title = "LPS vs Media: Negatively Enriched Gene Ontology Terms (BP, CC, MF)",
+       x = "GO Term",
+       y = "Gene Count",
+       fill = "-log10(Adjusted p-value)") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 30, hjust = 0.5),
+    axis.text.x = element_text(size = 25, angle = 85, hjust = 1),
+    axis.text.y = element_text(size = 25),
+    axis.title = element_text(size = 25),
+    legend.title = element_text(size = 25),
+    legend.text = element_text(size = 24)
+  )
+```
+
+***   
+***   
+***   
+
+## ANALYSIS OF Tumor Necrosis Factor- _alpha_ (TNF-α) secretion in LPS TREATED MONOCYTES      
+    
+##### Following the above workflow pipeline, a dataset of 38 out of 92 initial samples was statistically manipulated for downstream analysis. These samples represented the LPS-treated monocytes, where **cytokine release**, specifically **TNF-α** secretion capacity, was recorded. The metadata identified three distinct populations, of **high**, **low** and **intermediate** responders to _ex vivo Escherichia coli_-LPS stimulation, respectively. One sample, displaying intermediate response, was removed from the dataset. This was done to prevent skewing the analysis and ensure more accurate comparisons between responders.       
+    
+##### The scope of studying this secondary dataset was to investigate **immune tolerance** in endotoxin-challenged acute stage monocytes showing **impaired production of the pro-inflammatory cytokine TNF-α**.        
+
+```{r include= FALSE}
+# Removing sample S1049L from original dataset (intermediate response). 
+data_T <- read.csv("TNFalpha_counts.csv", row.names = 1) 
+data_T <- data_T[, !colnames(data_T) %in% "S1049L"]
+
+meta_T<- read.csv("TNFalpha_sample_info.csv", sep =",", row.names = 1)
+meta_T <- meta_T[rownames(meta_T) != "S1049L", ]
+
+# 56284 initial observations.18195 observations after filtering low counts for large sample size.
+data_T <- na.omit(data_T[rowSums(data_T) >= 100, ]) 
+
+# Checking that sample names match in both files and are in same order. Both output TRUE.
+all(colnames(data_T) %in% rownames(meta_T))
+all(colnames(data_T) == rownames(meta_T))
+
+# Building variables to store gene symbols and sample IDs for subsequent data manipulation.
+gene <- rownames(data_T)
+id <- colnames(data_T)
+```
+
+##### The **DESeqDataSet** was built with **Low Response** as the **reference level**, **sex** as a **covariate**, and all **factor levels** retained for unbiased exploration prior to normalization.
+
+```{r include= FALSE}
+# DESeqDataSet Object General exploration of all factor levels without any discrimination. Reference is set as Low Response. Sex is set as covariate. 
+meta_T$group <- relevel(factor(meta_T$group), ref = "low")
+dds_T <- DESeqDataSetFromMatrix(countData = data_T, colData = meta_T, design = ~ group + sex)
+
+# Investigating size factors.
+dds_T <- estimateSizeFactors(dds_T)
+data.frame(Sample = names(sizeFactors(dds_T)), SizeFactor = sizeFactors(dds_T))
+```
+
+```{r echo= FALSE, warning= FALSE, message= FALSE}
+plot(sizeFactors(dds_T), main = "LPS TNF-alpha - Size Factors")
+text(x = 32, y = 0.0806, labels = "S3013L (0.0806)", pos = 3, col = "darkred")
+text(x = 34, y = 1.45,  labels = "S3019L (1.7096)", pos = 3, col = "darkred")
+highlight_vals <- c(0.0806, 1.7096)
+for (val in highlight_vals) {
+  index <- which(round(sizeFactors(dds_T), 4) == val)
+  if (length(index) > 0) {
+    points(index, rep(val, length(index)), col = "darkred", pch = 21, bg = "white", lwd = 2)
+  }
+}
+```
+* Only two size factors notably deviated from 1 and may indicate outliers: sample 3013L, with a size factor of 0.08056695, which was consistent with earlier observations of the primary count matrix in the LPS vs. Media comparison (approximately 0.08), and sample S3019L, with a size factor of 1.70958503, which aligned with its previous value of 1.61950669.
+
+```{r include= FALSE}
+normalized_counts_T <- counts(dds_T, normalized=TRUE)
+write.table(normalized_counts_T, file="LPS_TNFalpha_normalised_counts.txt", sep="\t", quote=F, col.names=NA)
+unnormalized_counts_T <- counts(dds_T, normalized=FALSE)
+write.table(unnormalized_counts_T, file="LPS_TNFalpha_unnormalised_counts.txt", sep="\t", quote=F, col.names=NA)
+```
+***   
+
+### **Quality Control Assessment**    
+
+#### _Variance Exploration and PCA_   
+
+```{r include= FALSE}
+# Removing the dependence of the variance on the mean through variance stabilizing transformation.
+
+# blind=TRUE: unbiased by the experimental design or known sources of variation.
+rld_T <- vst(dds_T, blind=TRUE) 
+
+# Performing PCA on the variance-stabilized data.
+pca_res_T <- prcomp(assay(rld_T), scale. = TRUE)
+
+# Calculating variances of each PC.
+var_explained_T <- pca_res_T$sdev^2 / sum(pca_res_T$sdev^2)
+
+# Obtaining the loading values for both PC1 and PC2, as the PCA plot bellow identifies two distinct populations explained by PC1, along with further stratification in the variance explained by PC2.
+loadings_T_PC1 <- pca_res_T$rotation[, 1]
+loadings_T_PC2 <- pca_res_T$rotation[, 2]
+
+# Sorting the loadings to find genes with the highest contribution.
+sorted_loadings_T_PC1 <- sort(loadings_T_PC1, decreasing = TRUE)
+sorted_loadings_T_PC2 <- sort(loadings_T_PC2, decreasing = TRUE)
+
+# Creating a data frame of genes and their loadings.
+loading_df_T_PC1 <- data.frame(Gene = names(sorted_loadings_T_PC1), Loading = sorted_loadings_T_PC1)
+loading_df_T_PC2 <- data.frame(Gene = names(sorted_loadings_T_PC2), Loading = sorted_loadings_T_PC2)
+
+# Writing the loading information to CSV files.
+write.csv(loading_df_T_PC1, file = "TNFalpha_PCA_loadings_PC1.csv", row.names = FALSE)
+write.csv(loading_df_T_PC2, file = "TNFalpha_PCA_loadings_PC2.csv", row.names = FALSE)
+```
+
+``` {r echo= FALSE, message= FALSE, warning=FALSE, fig.width= 10, fig.height= 10}
+# Plotting PCA (labelled).
+pcaData_T <- plotPCA(rld_T, intgroup = c("group", "sex"), returnData = TRUE)
+# Plotting PC1 vs PC2.
+ggplot(pcaData_T, aes_string(x = "PC1", y = "PC2", color = "group", shape = "sex")) +
+  geom_point(size = 3) +
+  geom_text_repel(aes(label = rownames(pcaData_T)), size = 5) +  
+  ggtitle("PCA Plot LPS TNF-alpha Responses - PC1 vs PC2") +
+  xlab(paste0("PC1: ", round(100 * attr(pcaData_T, "percentVar")[1], 2), "% variance")) +
+  ylab(paste0("PC2: ", round(100 * attr(pcaData_T, "percentVar")[2], 2), "% variance")) +
+  theme_minimal()
+```
+* The PCA plot revealed two distinct populations along PC1, which explained 20.34% of the total variance in the dataset, indicating the presence of two major groups stratified by TNF-α response. Additionally, further stratification along PC2, which accounts for 12.55% of the variance, shows sex-stratified subpopulations exhibiting additional differentiation. While PC1 captured the primary clustering of samples, PC2 offered further insight into the complexity and relationships within those groups.
+
+#### _TNF-α Scree Plot of Variance Stabilized Data_
+
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+# Scree plot of descending eigenvalues.
+plot(var_explained_T, xlab = "Principal Component", ylab = "Proportion of Variance Explained", type = 'b', pch = 19, main = "LPS TNF-alpha: Variance Scree Plot")
+```
+#### _Visual Heatmaps of Hierarchical Clustering at different levels_
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, results= 'hide'}
+# Hierarchical clustering.
+rld_mat_T <- assay(rld_T)
+rld_cor_T <- cor(rld_mat_T)
+pheatmap(rld_cor_T, labels_row = paste0(dds_T$group), labels_col = paste0(rownames(meta_T)), fontsize_row = 6, fontsize_col = 6) + theme_test()
+```
+***
+
+### **DIFFERENTIAL EXPRESSION**
+
+#### _DESeq with Wald Test and $\mathrm{Log}_2 \mathrm{FC}$ Shrinkage_
+```{r echo= FALSE, warning= FALSE, message= FALSE}
+# DGE using negative binomial distribution and setting reference factor level as "low", to compare high responders to low responders.
+meta_T$group <- relevel(factor(meta_T$group), ref = "low")
+dds_T <- DESeqDataSetFromMatrix(countData = data_T, colData = meta_T, design = ~ group + sex)
+
+# Running analysis with Wald test.
+dds_T <- DESeq(dds_T)
+Wald_T <- nbinomWaldTest(dds_T)
+```
+
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+results(Wald_T)
+summary(results(Wald_T))
+```
+
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+# Extracting counts matrix and calculating raw column sums.
+col_sums_T <- colSums(counts(dds_T, normalized= FALSE))
+
+# Filtering raw column sums less than 5,000,000 (S3013L, 1168165).
+filtered_col_sums_T <- col_sums_T[col_sums_T < 5000000]
+
+# Plotting total number of raw counts per sample.
+plot(col_sums_T, main = "Total Raw Counts per Sample - LPS TNF-alpha")
+```
+* This was consistent with the incipient investigation between LPS and media treated samples. While sample 3013L appeared to be an outlier potentially skewing the data, it was not removed from the dataset, to avoid introducing bias and because plotting normalized results identified no counts bellow the expected threshold. 
+
+
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+# Extracting counts matrix and calculating normalized column sums.
+col_sums_T_norm <- colSums(counts(dds_T, normalized= TRUE))
+# Filtering normalized column sums less than 5,000,000 (none).
+filtered_col_sums_T_norm <- col_sums_T_norm[col_sums_T_norm < 5000000]
+# Plotting total number of normalized counts per sample.
+plot(col_sums_T_norm, main = "Total Normalized Counts per Sample - LPS TNF-alpha")
+```
+
+#### _Dispersion Estimation Plot_
+```{r echo= FALSE, fig.width= 10}
+# Looking at dispersion estimates for diagnosis: plotting the per-gene dispersion estimates together with the fitted mean-dispersion relationship.
+plotDispEsts(dds_T, ylim = c(1e-6, 1e2), main = "Dispersion Estimates for LPS TNF-alpha in Monocytes: Fitted Mean-Dispersion Relationship")
+# Defining pair-wise contrasts: low response as base level; coef = 2 (2 levels).
+contrast_condition_T <- c("group", "high", "low") 
+```
+#### _MA Plots_
+
+##### **Shrunken $\mathrm{log}_2 \mathrm{FC}$** values were computed using the **_ashr_** method for the LPS TNF-α contrast. An initial **MA plot** visualized the overall shrinkage effect across all genes, while a second, filtered **MA plot** (padj ≤ 0.01) highlighted only significantly DEGs for clearer interpretation and downstream analysis.  The accompanying **summary statistics** provided an overall snapshot of gene regulation of signifficant changes (p < 0.1 and padj ≤ 0.01, respectivelly).
+
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+# Saving corrected (shrunken) log2FC (for downstream GSEA analysis).
+DGE_table_condition_T <- lfcShrink(dds_T, contrast=contrast_condition_T, coef=2, type="ashr")
+# MA plot.
+plotMA(DGE_table_condition_T, main="Type ashr LPS TNF-alpha")
+# Summarizing results
+summary(DGE_table_condition_T) 
+```
+
+```{r include= FALSE}
+# Exploring results in DESeqResults object (column info).
+mcols(DGE_table_condition_T, use.names=T)
+# Assigning gene symbols as row names.
+rownames(DGE_table_condition_T) <- gene
+# Saving results as data frame table. 18256 observations. 
+DGE_table_condition_T_df <- data.frame(DGE_table_condition_T)
+DGE_table_condition_T_df$symbol <- rownames(DGE_table_condition_T_df)
+write.table(DGE_table_condition_T_df, file="DGE_results_high_vs_low_LPS_TFN-alpha.txt", sep="\t", quote=F, col.names=NA)
+# Subsetting the tibble table by filtering by adjused p-value significance of <= 0.1.
+sigDE_table_condition_T <- DGE_table_condition_T_df %>%
+  dplyr::filter(padj <= 0.01) 
+# Ordering highest to lowest Log2FoldChange values.
+sigDE_table_condition_T <- sigDE_table_condition_T[order(sigDE_table_condition_T$log2FoldChange, decreasing = TRUE), ]
+# Top 5 high and low log2FC values.
+# HIGH
+head(sigDE_table_condition_T, 5)
+# LOW
+tail(sigDE_table_condition_T, 5)
+# Saving table of significant DEGs ordered by LFC value. - with covariate, went from 430 observations, to 27.
+write.table(sigDE_table_condition_T, file="sigDE_padj<=0.01_LPS_TNF-alpha_table_condition_Type_ashr.txt", sep="\t", quote=F, col.names=NA)
+```
+
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 10, fig.height= 10}
+# Filtering significant results (where src = shrunken results with contrast).
+src_T <- na.omit(subset(DGE_table_condition_T, padj <= 0.01)) 
+plotMA(src_T, ylim = c(-3,3), main="MA Plot with Type ashr Shrinkage and Contrast With Sex Covariate (padj <= 0.1) - LPS TNF-alpha") 
+
+# Converting data frame into tibble with explicitly presented "gene" names in a column for further analysis and visualization.
+src_tb_T <- src_T %>%
+  data.frame() %>%
+  rownames_to_column(var = "symbol") %>%
+  as_tibble()
+
+# Further exploring results.
+summary(src_T)
+```
+#### _Volcano Plot_
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.height= 10, fig.width= 10}
+DGE_table_condition_T_tb <- DGE_table_condition_T %>%
+  data.frame() %>%
+  rownames_to_column(var = "symbol") %>%
+  as_tibble()
+
+EnhancedVolcano(DGE_table_condition_T_tb,
+    title = "LPS TNF-alpha Differentially Expressed Genes",
+    lab = (DGE_table_condition_T_tb$symbol),
+    x = 'log2FoldChange',
+    y = 'pvalue')
+```
+
+***
+
+### **PATHWAY ANALYSIS**  
+
+#### _Annotation_
+
+##### Gene **annotation** was performed by mapping gene symbols to ENSEMBL IDs using **_AnnotationDbi_** and **_org.Hs.eg.db_**, followed by filtering for valid, high-expression entries (baseMean > 50) to ensure reliability in downstream analyses.
+
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+# Using mapIds to map gene symbols to ENSEMBL IDs, for integrating and managing gene annotations effectively for further analysis.
+src_tb_T$ensgene <- src_tb_T$symbol
+src_tb_T$ensgene <- mapIds(org.Hs.eg.db, 
+                                         keys = src_tb_T$ensgene, 
+                                         column = "ENSEMBL", 
+                                         keytype = "SYMBOL", 
+                                         multiVals = "first")
+# Saving annotated version (not filtered by significance).
+write.table(src_tb_T, file="sig_DGE_results_LPS_TNF-alpha_annotated.txt", sep="\t", quote=F, col.names=NA)
+src_tb_TNF <- na.omit(subset(src_tb_T, symbol != "" & symbol != "NA" & ensgene != "" & ensgene != "NA" & baseMean > 50))
+# Further exploring results
+summary(src_tb_TNF)
+```
+
+#### **PPI analysis using STRING**
+
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+# Upregulated
+
+src_tb_up_TNF <- subset(src_tb_TNF, log2FoldChange > 0)
+#src_tb_up_TNF$ensgene <- sapply(src_tb_up_TNF$ensgene, paste, collapse = ";")
+
+# Sorting descending by log2FC.
+src_tb_up_TNF <- src_tb_up_TNF[order(src_tb_up_TNF$log2FoldChange, decreasing = TRUE), ] 
+
+write.csv(src_tb_up_TNF, file = "DGE_UP_TNF-alpha.csv")
+write.table(src_tb_up_TNF[, 7], "DGE_UP_TNF-alpha_gene_ensemblID.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(src_tb_up_TNF[, 1], "DGE_UP_TNF-alpa_gene_symbols.txt", row.names = FALSE, col.names = FALSE)
+
+head(src_tb_up_TNF$symbol, 100) 
+```
+Permalink STRING Output LPS TNF-α Upregulated  [link](https://version-12-0.string-db.org/cgi/network?networkId=bGJ2fUAIpL2p)
+```{r echo= FALSE, message= FALSE, warning= FALSE}
+# Downregulated
+
+src_tb_down_TNF <- subset(src_tb_TNF, log2FoldChange < 0)
+
+src_tb_down_TNF <- src_tb_down_TNF[order(src_tb_down_TNF$log2FoldChange, decreasing = FALSE), ] 
+
+
+write.csv(src_tb_down_TNF, file = "DGE_DOWN_TNF-alpha.csv")
+write.table(src_tb_down_TNF[, 7], "DGE_DOWN_TNF-alpha_gene_ensemblID.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(src_tb_down_TNF[, 1], "DGE_DOWN_TNF-alpha_gene_symbols.txt", row.names = FALSE, col.names = FALSE)
+
+head(src_tb_down_TNF$symbol, 100) 
+```
+Permalink STRING Output LPS TNF-α Downregulated [link](https://version-12-0.string-db.org/cgi/network?networkId=bhzs9lGfv73z)
+
+### **GO Enrichment Analysis**
+#### _Upregulated genes_
+```{r include= FALSE}
+GO_results_pos_BP_TNF <- enrichGO(gene = src_tb_up_TNF$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "BP")
+GO_res_pos_df_BP_TNF <- as.data.frame(GO_results_pos_BP_TNF)
+
+GO_results_pos_CC_TNF <- enrichGO(gene = src_tb_up_TNF$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "CC")
+GO_res_pos_df_CC_TNF <- as.data.frame(GO_results_pos_CC_TNF)
+
+GO_results_pos_MF_TNF <- enrichGO(gene = src_tb_up_TNF$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "MF")
+GO_res_pos_df_MF_TNF <- as.data.frame(GO_results_pos_MF_TNF)
+```
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 10, fig.height= 11}
+barplot(GO_results_pos_BP_TNF, showCategory = 10) + 
+  ggtitle("GO +ve BP  (padj <= 0.01) - TNF-alpha LPS-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+
+barplot(GO_results_pos_CC_TNF, showCategory = 10) + 
+  ggtitle("GO +ve CC  (padj <= 0.01) - TNF-alpha LPS-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+
+barplot(GO_results_pos_MF_TNF, showCategory = 10) + 
+  ggtitle("GO +ve MF   (padj <= 0.01) - TNF-alpha LPS-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 25, fig.height= 18}
+all_GO<- rbind(GO_res_pos_df_BP_TNF, GO_res_pos_df_CC_TNF, GO_res_pos_df_MF_TNF)
+
+# Sort by adjusted p-value
+top10_GO <- all_GO %>%
+  arrange(p.adjust) %>%
+  slice(1:10)
+top10_GO$Description <- str_wrap(top10_GO$Description, width = 30)
+
+ggplot(top10_GO, aes(x = reorder(Description, p.adjust), 
+                     y = Count, 
+                     fill = -log10(p.adjust))) +
+  geom_bar(stat = "identity") +
+  scale_fill_gradient(high = "#E06663", low = "#327EBA") +
+  labs(title = "TNF-alpha LPS-Treated Monocytes: Positively Enriched Gene Ontology Terms (BP, CC, MF)",
+       x = "GO Term",
+       y = "Gene Count",
+       fill = "-log10(Adjusted p-value)") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 30, hjust = 0.5),
+    axis.text.x = element_text(size = 25, angle = 85, hjust = 1),
+    axis.text.y = element_text(size = 25),
+    axis.title = element_text(size = 25),
+    legend.title = element_text(size = 25),
+    legend.text = element_text(size = 24)
+  )
+```
+
+#### _Downregulated genes_    
+```{r include= FALSE}
+GO_results_neg_BP_TNF <- enrichGO(gene = src_tb_down_TNF$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "BP")
+GO_res_neg_df_BP_TNF <- as.data.frame(GO_results_neg_BP_TNF)
+
+GO_results_neg_CC_TNF <- enrichGO(gene = src_tb_down_TNF$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "CC")
+GO_res_neg_df_CC_TNF <- as.data.frame(GO_results_neg_CC_TNF)
+
+GO_results_neg_MF_TNF <- enrichGO(gene = src_tb_down_TNF$symbol, OrgDb = "org.Hs.eg.db", keyType = "SYMBOL", ont = "MF")
+GO_res_neg_df_MF_TNF <- as.data.frame(GO_results_neg_MF_TNF)
+```
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 10, fig.height= 11}
+barplot(GO_results_neg_BP_TNF, showCategory = 10) + 
+  ggtitle("GO -ve BP  (padj <= 0.01) - TNF-alpha LPS-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+barplot(GO_results_neg_CC_TNF, showCategory = 10) + 
+  ggtitle("GO -ve CC  (padj <= 0.01) - TNF-alpha LPS-Treated Monocytes") +
+  theme(plot.title = element_text(face = "bold"))
+# lenght zero
+#barplot(GO_results_neg_MF_TNF, showCategory = 10) + 
+  #ggtitle("GO -ve MF (padj <= 0.01) - TNF-alpha LPS-Treated Monocytes") +
+  #theme(plot.title = element_text(face = "bold"))
+```
+
+```{r echo= FALSE, message= FALSE, warning= FALSE, fig.width= 25, fig.height= 18}
+all_GO<- rbind(GO_res_neg_df_BP_TNF, GO_res_neg_df_CC_TNF, GO_res_neg_df_MF_TNF)
+
+top10_GO <- all_GO %>%
+  arrange(p.adjust) %>%
+  slice(1:10)
+top10_GO$Description <- str_wrap(top10_GO$Description, width = 30)
+
+ggplot(top10_GO, aes(x = reorder(Description, p.adjust), 
+                     y = Count, 
+                     fill = -log10(p.adjust))) +
+  geom_bar(stat = "identity") +
+  scale_fill_gradient(high = "#E06663", low = "#327EBA") +
+  labs(title = "TNF-alpha LPS-Treated Monocytes: Negatively Enriched Gene Ontology Terms (BP, CC, MF)",
+       x = "GO Term",
+       y = "Gene Count",
+       fill = "-log10(Adjusted p-value)") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 30, hjust = 0.5),
+    axis.text.x = element_text(size = 25, angle = 85, hjust = 1),
+    axis.text.y = element_text(size = 25),
+    axis.title = element_text(size = 25),
+    legend.title = element_text(size = 25),
+    legend.text = element_text(size = 24)
+  )
+low_males <- subset(meta_T, group == "low" & sex == "Male")
+```
+
+
+```{r include= FALSE}
+# Block of Code for Building Input Files in GSEA Software:
+# Getting gene symbols from expression matrix.
+gene_symbols <- rownames(normalized_counts_T)
+
+# Map ping symbols to Ensembl IDs using org.Hs.eg.db.
+symbol_to_ensembl <- mapIds(org.Hs.eg.db,
+                            keys = gene_symbols,
+                            column = "ENSEMBL",
+                            keytype = "SYMBOL",
+                            multiVals = "first")
+
+# Removing NAs and creating a data frame.
+symbol_to_ensembl <- na.omit(symbol_to_ensembl)
+expression_df <- as.data.frame(normalized_counts_T)
+
+# Keeping only rows with matching Ensembl IDs.
+expression_df <- expression_df[rownames(expression_df) %in% names(symbol_to_ensembl), ]
+
+# Adding Ensembl ID column.
+expression_df$EnsemblID <- symbol_to_ensembl[rownames(expression_df)]
+
+# Renaming EnsemblID column to NAME and add Description.
+expression_df$NAME <- expression_df$EnsemblID
+expression_df$Description <- "NA"
+
+# Reordering columns: NAME, Description, then all samples.
+sample_columns <- setdiff(colnames(expression_df), c("EnsemblID", "NAME", "Description"))
+expression_gct <- expression_df[, c("NAME", "Description", sample_columns)]
+
+# Ensuring no row names.
+rownames(expression_gct) <- NULL
+
+# Dimensions for GSEA format.
+num_rows <- nrow(expression_gct)
+num_cols <- ncol(expression_gct) - 2  # To exclude NAME and Description
+
+# Building the phenotype file:
+# Defining the rows.
+row1 <- "37 2 1"
+row2 <- "# high low" 
+expresion_meta_T <- meta_T$group
+row3 <- paste(expresion_meta_T, collapse = "\t")
+
+# Creating and writing to the file in the current working directory.
+#writeLines(c(row1, row2, row3), con = "phenotype_labels_GSEA_file_LPS_TNFalpha.cls")
+```
