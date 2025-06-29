@@ -16,8 +16,7 @@ HTML Format Notebook Output: Differential_Gene_Expression.nb.html
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Working Directory Setup
 
-    	The working directory is automatically set in the R Markdown file using rstudioapi to the location where the .Rmd file is saved.
-    	No manual adjustment of file paths is needed, making the analysis portable across systems running RStudio.
+    	Manual adjustment of file paths is needed to the locaion of the "DGE_Analysis.Rmd" file containing the R script.
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Libraries Employed (CRAN and Bioconductor)
 
