@@ -141,6 +141,7 @@ Using GSEA v4.3.3 (Linux)
 
 * All R code is included in `DGE_Analysis.Rmd`
 * The notebook output is `DGE_Analysis.nb.html` and `Differential Gene Expression_Notebook.pdf`
+* Manual adjustment of the working directory path is required
 * Reproducibility is ensured through pinned versions and session info
 
 ---
